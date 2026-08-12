@@ -614,8 +614,16 @@
 }
 
 @media (max-width: 960px) {
-  .hero-logo-float { display: none; }
-  .hero-content { max-width: 100%; }
+  .hero { flex-direction: column-reverse; justify-content: center; padding-top: 120px; padding-bottom: 40px; }
+  .hero-logo-float { display: flex; position: relative; right: auto; top: auto; transform: none; width: 240px; height: 240px; margin: 0 auto 30px; }
+  .hero-logo-img { width: 180px; height: 180px; }
+  .ring-1 { width: 200px; height: 200px; }
+  .ring-2 { width: 220px; height: 220px; }
+  .ring-3 { width: 240px; height: 240px; }
+  .hero-content { max-width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; padding-top: 0; padding-bottom: 20px; }
+  .hero-actions { justify-content: center; }
+  .hero-desc { margin-left: auto; margin-right: auto; }
+
   .server-layout { grid-template-columns: 1fr; }
   .server-card { position: static; }
   .server-features { grid-template-columns: 1fr 1fr; }
