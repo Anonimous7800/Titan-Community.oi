@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda de Puntos – Titan Community</title>
+  <meta name="description" content="Gana puntos jugando en el servidor Titan Community y canjéalos por cosméticos y recompensas exclusivas." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/canje.css" />
+</head>
+<body>
+
+<div class="bg-animated"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.png" alt="Titan Community Logo" />
+        <span class="nav-logo-text">Titan Community</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">🏠 Inicio</a></li>
+        <li><a href="servidor.html">⚔️ Servidor</a></li>
+        <li><a href="descargas.html">📥 Descargar</a></li>
+        <li><a href="addons.html">🔮 Addons</a></li>
+        <li><a href="discord.html">💬 Discord</a></li>
+        <li><a href="tienda.html">🛒 Tienda</a></li>
+        <li><a href="canje.html" class="active">⭐ Puntos</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="tienda.html" class="btn btn-primary btn-sm">🛒 Tienda</a>
+      </div>
+      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="points-hero">
+  <div class="container">
+    <div class="text-center" style="position:relative;z-index:1;">
+      <div class="section-label">⭐ Sistema de Puntos</div>
+      <h1 class="section-title">Gana & <span class="highlight">Canjea</span></h1>
+      <p class="section-sub" style="margin:0 auto 0;">Juega en el servidor, acumula puntos y canjéalos por cosméticos y recompensas exclusivas totalmente gratis.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div style="padding: 40px 0 80px; position:relative; z-index:1;">
+  <div class="container">
+
+    <!-- ══════ PLAYER INFO CARDS ══════ -->
+    <div class="player-card-wrap reveal">
+
+      <!-- Main Player Card -->
+      <div class="player-card main-card card">
+        <div class="player-avatar" id="playerAvatar">🧑</div>
+        <div class="player-name-display" id="playerNameDisplay">Jugador</div>
+        <div class="player-rank-tag" id="playerRankDisplay">Sin Rango</div>
+        <div class="player-nick-input">
+          <input type="text" id="nicknameInput" placeholder="Ingresa tu nick de Minecraft..." />
+          <button class="btn btn-primary btn-sm" onclick="loadPlayer()">Cargar</button>
+        </div>
+      </div>
+
+      <!-- Points Balance -->
+      <div class="player-card points-balance-card card reveal reveal-delay-1">
+        <div class="balance-label">⭐ Mis Puntos</div>
+        <div class="balance-amount" id="pointsDisplay">0</div>
+        <div class="balance-sub">Puntos disponibles para canjear</div>
+        <div class="divider" style="margin: 16px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700; margin-bottom:4px;">¿Cómo ganar puntos?</div>
+          <div style="display:flex; align-items:center; gap:10px; background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.15); border-radius:8px; padding:10px 12px;">
+            <span style="font-size:1.2rem;">🎮</span>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Juega en el servidor y acumula puntos por cada hora activa</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.15); border-radius:8px; padding:10px 12px;">
+            <span style="font-size:1.2rem;">🏆</span>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Participa en torneos y eventos especiales del servidor</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.15); border-radius:8px; padding:10px 12px;">
+            <span style="font-size:1.2rem;">📅</span>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Entra cada día para obtener tu bono de login diario</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Stats -->
+      <div class="player-card stats-card card reveal reveal-delay-2">
+        <h4 class="font-cinzel" style="font-size:0.9rem; margin-bottom:4px;">📊 Mis Estadísticas</h4>
+        <div class="stat-row">
+          <span class="stat-row-label">⭐ Total ganados</span>
+          <span class="stat-row-value gold" id="statTotal">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">🎁 Items canjeados</span>
+          <span class="stat-row-value purple" id="statRedeemed">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">🕒 Horas jugadas</span>
+          <span class="stat-row-value" id="statHours">0h</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">🏆 Rango puntos</span>
+          <span class="stat-row-value green" id="statRank">#--</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">⚡ Racha activa</span>
+          <span class="stat-row-value" id="statStreak">0 días</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ HOW TO EARN ══════ -->
+    <div class="reveal">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div class="section-label" style="margin-bottom:8px;">💡 Cómo Ganar Puntos</div>
+          <h2 class="section-title" style="font-size:1.6rem; margin:0;">Métodos de <span class="highlight">Ganancias</span></h2>
+        </div>
+      </div>
+
+      <div class="earn-grid">
+        <div class="earn-card">
+          <span class="earn-icon">⏰</span>
+          <div class="earn-title">Por Tiempo</div>
+          <div class="earn-points">+5 pts/30min</div>
+          <div class="earn-desc">Gana puntos simplemente estando conectado al servidor</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">⚔️</span>
+          <div class="earn-title">PvP</div>
+          <div class="earn-points">+20 pts/kill</div>
+          <div class="earn-desc">Elimina jugadores en el arena o en el mundo</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">🏆</span>
+          <div class="earn-title">Torneos</div>
+          <div class="earn-points">+500 pts</div>
+          <div class="earn-desc">Gana o participa en torneos semanales del servidor</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">📅</span>
+          <div class="earn-title">Login Diario</div>
+          <div class="earn-points">+50 pts/día</div>
+          <div class="earn-desc">Conéctate cada día para tu bonificación de racha</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">🐉</span>
+          <div class="earn-title">Matar Jefes</div>
+          <div class="earn-points">+100 pts</div>
+          <div class="earn-desc">Derrota a los jefes especiales del servidor</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">🛠️</span>
+          <div class="earn-title">Crafteo</div>
+          <div class="earn-points">+2 pts</div>
+          <div class="earn-desc">Gana puntos por cada craft especial que realices</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">💬</span>
+          <div class="earn-title">Discord</div>
+          <div class="earn-points">+30 pts</div>
+          <div class="earn-desc">Participa en el Discord de la comunidad</div>
+        </div>
+        <div class="earn-card">
+          <span class="earn-icon">🌟</span>
+          <div class="earn-title">Racha x7</div>
+          <div class="earn-points">x2 puntos</div>
+          <div class="earn-desc">7 días seguidos = multiplica todos tus puntos x2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ REDEEM STORE ══════ -->
+    <div class="reveal">
+      <div style="margin-bottom:24px;">
+        <div class="section-label" style="margin-bottom:8px;">🎁 Tienda de Canje</div>
+        <h2 class="section-title" style="font-size:1.6rem; margin-bottom:16px;">Canjea tus <span class="highlight">Puntos</span></h2>
+      </div>
+
+      <!-- Redeem Tabs -->
+      <div style="padding: 40px 20px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(255,215,0,0.3); margin: 20px auto; max-width: 600px;">
+        <div style="font-size: 4rem; margin-bottom: 16px;">🚧</div>
+        <h3 style="color: var(--gold); font-family: var(--font-cinzel); font-size: 1.8rem; margin-bottom: 12px;">PRÓXIMAMENTE</h3>
+        <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6;">La tienda de canje gratuita está en construcción. Pronto podrás usar tus puntos para obtener recompensas épicas.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ══════ HISTORY ══════ -->
+    <div class="reveal">
+      <div style="margin-bottom:20px;">
+        <div class="section-label" style="margin-bottom:8px;">📜 Historial</div>
+        <h2 class="section-title" style="font-size:1.4rem; margin:0;">Mis <span class="highlight">Transacciones</span></h2>
+      </div>
+
+      <div class="card" style="padding:0; overflow-x:auto;">
+        <table class="history-table" id="historyTable" style="min-width: 500px;">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Puntos</th>
+              <th>Saldo</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="4" style="text-align:center; color:var(--text-muted); padding:40px;">
+                📜 No hay historial aún. ¡Empieza a jugar para ganar puntos!
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ══════ EARN TABLE ══════ -->
+    <div class="reveal">
+      <div class="section-label" style="margin-bottom:8px;">📋 Tabla Completa</div>
+      <h2 class="section-title" style="font-size:1.4rem; margin-bottom:20px;">Todas las formas de <span class="highlight">Ganar</span></h2>
+
+      <div class="earn-table-wrap">
+        <table class="earn-table">
+          <thead>
+            <tr>
+              <th>Actividad</th>
+              <th>Puntos</th>
+              <th>Frecuencia</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>⏰ Tiempo de juego</td><td class="pts">+5</td><td>Cada 30 minutos</td><td>Sin límite diario</td></tr>
+            <tr><td>⚔️ Kill en PvP</td><td class="pts">+20</td><td>Por eliminación</td><td>No en kills de alt</td></tr>
+            <tr><td>🐉 Matar jefe del servidor</td><td class="pts">+100</td><td>Por jefe</td><td>Wither, Dragón, especiales</td></tr>
+            <tr><td>📅 Login diario</td><td class="pts">+50</td><td>1 vez al día</td><td>Racha reinicia si fallas</td></tr>
+            <tr><td>🌟 Racha de 7 días</td><td class="pts">x2</td><td>Multiplicador semanal</td><td>Activo hasta romper racha</td></tr>
+            <tr><td>🏆 Ganar torneo</td><td class="pts">+500</td><td>Por evento</td><td>1er lugar del torneo</td></tr>
+            <tr><td>🥈 Top 3 torneo</td><td class="pts">+200</td><td>Por evento</td><td>2do y 3er lugar</td></tr>
+            <tr><td>🛠️ Craft especial</td><td class="pts">+2</td><td>Por craft</td><td>Solo items especiales</td></tr>
+            <tr><td>💬 Activo en Discord</td><td class="pts">+30</td><td>Semanal</td><td>Verificado en Discord</td></tr>
+            <tr><td>👋 Reclutar jugador</td><td class="pts">+150</td><td>Por recluta</td><td>Debe jugar +2h</td></tr>
+            <tr><td>🎖️ Evento especial</td><td class="pts">Varía</td><td>Evento</td><td>Anunciado en Discord</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ REDEEM CONFIRM MODAL ══════ -->
+<div class="modal-overlay" id="redeemModal">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <h3 class="font-cinzel" style="font-size:1.1rem;">🎁 Confirmar Canje</h3>
+      <button class="modal-close" onclick="closeRedeemModal()">✕</button>
+    </div>
+
+    <div style="text-align:center; margin-bottom:24px;">
+      <div id="redeemModalIcon" style="font-size:4rem; margin-bottom:12px;"></div>
+      <h4 class="font-cinzel" style="font-size:1.2rem; margin-bottom:8px;" id="redeemModalName"></h4>
+      <p class="text-muted text-sm" id="redeemModalDesc"></p>
+    </div>
+
+    <div class="order-summary" style="margin-bottom:20px;">
+      <div class="order-summary-row">
+        <span>Tus puntos actuales</span>
+        <span style="color:var(--gold);" id="redeemModalBalance"></span>
+      </div>
+      <div class="order-summary-row">
+        <span>Costo del canje</span>
+        <span style="color:var(--fire-orange);" id="redeemModalCost"></span>
+      </div>
+      <div class="order-summary-row">
+        <span>Puntos restantes</span>
+        <span id="redeemModalRemaining"></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🎮 Tu nick en el servidor</label>
+      <input class="form-input" id="redeemNick" type="text" placeholder="Nombre exacto de Minecraft" />
+    </div>
+
+    <button class="buy-btn gold-btn" style="font-size:0.95rem; padding:13px; margin-top:8px;" onclick="confirmRedeem()">
+      ⭐ Confirmar Canje
+    </button>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="Titan Community" />
+        <h3>Titan Community</h3>
+        <p>Sistema de puntos gratuito para recompensar a los mejores jugadores de nuestra comunidad.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Tiendas</h4>
+        <ul>
+          <li><a href="tienda.html">🛒 Tienda Premium</a></li>
+          <li><a href="canje.html">⭐ Mis Puntos</a></li>
+          <li><a href="index.html">🏠 Inicio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ayuda</h4>
+        <ul>
+          <li><a href="https://discord.gg/titan-community" target="_blank">💬 Discord</a></li>
+          <li><a href="#">❓ FAQ Puntos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Servidor</h4>
+        <ul>
+          <li><a href="servidor.html">⚔️ Cómo conectar</a></li>
+          <li><a href="addons.html">🔮 Addons</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Titan Community · Sistema de puntos gratuito</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+<script src="js/productos.js"></script>
+<script src="js/canje.js"></script>
+<script src="js/ai-decorator.js"></script>
+</body>
+</html>
+

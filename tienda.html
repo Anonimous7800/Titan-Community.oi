@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda Premium – Titan Community</title>
+  <meta name="description" content="Compra kits, rangos, mascotas y items exclusivos para el servidor Minecraft de Titan Community." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/tienda.css" />
+</head>
+<body>
+
+<div class="bg-animated"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.png" alt="Titan Community Logo" />
+        <span class="nav-logo-text">Titan Community</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">🏠 Inicio</a></li>
+        <li><a href="servidor.html">⚔️ Servidor</a></li>
+        <li><a href="descargas.html">📥 Descargar</a></li>
+        <li><a href="addons.html">🔮 Addons</a></li>
+        <li><a href="discord.html">💬 Discord</a></li>
+        <li><a href="tienda.html" class="active">🛒 Tienda</a></li>
+        <li><a href="canje.html">⭐ Puntos</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="canje.html" class="btn btn-secondary btn-sm">⭐ Mis Puntos</a>
+      </div>
+      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-content container">
+    <div class="section-label">💎 Tienda Premium</div>
+    <h1 class="section-title">Mejora tu <span class="highlight">Poder</span></h1>
+    <p class="section-sub" style="margin: 0 auto 0;">Compra con dinero real y obtén ventajas épicas en el servidor. Pago 100% seguro.</p>
+  </div>
+</div>
+
+<div class="store-content" style="padding: 80px 0 120px;">
+  <div class="container">
+    <div style="padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(123,47,255,0.3); margin: 40px auto; max-width: 600px;">
+      <div style="font-size: 4rem; margin-bottom: 20px;">🚧</div>
+      <h3 style="color: var(--purple-glow); font-family: var(--font-cinzel); font-size: 2rem; margin-bottom: 12px;">PRÓXIMAMENTE</h3>
+      <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">La tienda premium oficial está en desarrollo. Pronto podrás adquirir kits, rangos y mascotas exclusivas.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="Titan Community" />
+        <h3>Titan Community</h3>
+        <p>Compras seguras para el mejor servidor de Minecraft Bedrock. ¿Problemas? Contacta en Discord.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#" onclick="switchTab('kits', document.getElementById('tab-kits'))">⚔️ Kits</a></li>
+          <li><a href="#" onclick="switchTab('rangos', document.getElementById('tab-rangos'))">👑 Rangos</a></li>
+          <li><a href="#" onclick="switchTab('mascotas', document.getElementById('tab-mascotas'))">🐾 Mascotas</a></li>
+          <li><a href="#" onclick="switchTab('especiales', document.getElementById('tab-especiales'))">✨ Especiales</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Soporte</h4>
+        <ul>
+          <li><a href="https://discord.gg/titan-community" target="_blank">💬 Abrir ticket</a></li>
+          <li><a href="index.html">🏠 Inicio</a></li>
+          <li><a href="canje.html">⭐ Mis Puntos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">📜 Términos</a></li>
+          <li><a href="#">🔒 Privacidad</a></li>
+          <li><a href="#">↩️ Reembolsos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Titan Community · No afiliado con Mojang Studios</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+<script src="js/ai-decorator.js"></script>
+</body>
+</html>
+

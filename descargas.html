@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Descargas – Titan Community</title>
+  <meta name="description" content="Descarga la última versión de Minecraft Bedrock." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+
+<div class="bg-animated"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- ══════ NAVBAR ══════ -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.png" alt="Titan Community Logo" />
+        <span class="nav-logo-text">Titan Community</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">🏠 Inicio</a></li>
+        <li><a href="servidor.html">⚔️ Servidor</a></li>
+        <li><a href="descargas.html" class="active">📥 Descargar</a></li>
+        <li><a href="addons.html">🔮 Addons</a></li>
+        <li><a href="discord.html">💬 Discord</a></li>
+        <li><a href="tienda.html">🛒 Tienda</a></li>
+        <li><a href="canje.html">⭐ Puntos</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="https://discord.gg/titan-community" target="_blank" class="btn btn-discord btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.042.033.055a19.926 19.926 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          Discord
+        </a>
+        <a href="tienda.html" class="btn btn-primary btn-sm">🛒 Tienda</a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top: 100px;"></div>
+
+<!-- ══════ DOWNLOAD HERO ══════ -->
+<section style="padding: 40px 0 0; position:relative; z-index:1;">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">📥 Descarga Gratuita</div>
+      <h1 class="section-title">Minecraft Bedrock <span class="highlight">Última Versión</span></h1>
+      <p class="section-sub" style="margin: 0 auto 20px; max-width:560px;">
+        La versión exacta que usa Titan Community. Descargada directamente desde GitHub, siempre segura y actualizada.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ VERSION CARD ══════ -->
+<section class="section" id="download" style="padding-top:30px;">
+  <div class="container">
+
+    <!-- Main download card -->
+    <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-glow); border-radius:20px; overflow:hidden; box-shadow: 0 0 40px rgba(123,47,255,0.15);">
+
+      <!-- Style overrides and animations for AI scanner -->
+      <style>
+        @keyframes mc-pulse {
+          0% { opacity: 0.35; transform: scale(0.95); }
+          100% { opacity: 1; transform: scale(1.05); }
+        }
+        .ai-log-entry {
+          animation: fadeInLog 0.3s ease-out forwards;
+        }
+        @keyframes fadeInLog {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      </style>
+
+      <!-- Dynamic Banner with AI overlay -->
+      <div style="width:100%; min-height:300px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; transition: all 0.5s ease;">
+        <img id="dl-version-banner" src="assets/mc_banner.png" alt="Minecraft Banner" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.75; transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; z-index:1;" />
+        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(8,8,15,1) 0%, rgba(8,8,15,0.4) 60%, transparent 100%); z-index:2;"></div>
+        
+        <!-- AI HUD Overlay -->
+        <div id="ai-hud" style="position:absolute; top:20px; right:20px; z-index:10; background:rgba(8, 8, 15, 0.85); border:1px solid var(--border-glow); border-radius:10px; padding:12px; font-family:monospace; font-size:0.75rem; width:280px; max-width:90%; color:#00ff88; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(8px); display:none; flex-direction:column; gap:6px; transition: border-color 0.5s ease;">
+          <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(0,255,136,0.2); padding-bottom:6px; margin-bottom:4px; font-weight:bold;">
+            <span style="display:flex; align-items:center; gap:6px;">
+              <span style="width:8px; height:8px; background:#00ff88; border-radius:50%; display:inline-block; animation:mc-pulse 1s infinite alternate;"></span>
+              🤖 IA ARTWORK FINDER
+            </span>
+            <span style="color:#ff9f43; font-size:0.7rem;" id="ai-hud-status">BUSCANDO</span>
+          </div>
+          <div id="ai-hud-log" style="line-height:1.4; height:85px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; padding-right:4px;">
+            <span style="color:#a855f7;">> Inicializando Módulo IA...</span>
+          </div>
+        </div>
+
+        <!-- Banner Content -->
+        <div style="position:relative; z-index:3; padding:32px 32px 20px; width:100%;">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
+                <span class="badge badge-new" id="dl-tag-badge" style="background:var(--purple-main); color:white; border:none; box-shadow:0 0 10px rgba(123,47,255,0.4); padding:4px 10px; font-size:0.75rem; border-radius:6px; transition: background-color 0.5s ease, box-shadow 0.5s ease;">Latest Release</span>
+                <span style="font-size:0.75rem; color:rgba(255,255,255,0.6); display:flex; align-items:center; gap:5px;">
+                  <span style="width:6px; height:6px; background:#00ff88; border-radius:50%;"></span> Extraído desde GitHub
+                </span>
+              </div>
+              <h2 id="dl-version-title" style="font-family:var(--font-cinzel); font-size:2rem; margin:0; color:white; font-weight:900; text-shadow:0 2px 10px rgba(0,0,0,0.8);">Cargando versión...</h2>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <span style="background:rgba(0,255,136,0.15); border:1px solid rgba(0,255,136,0.3); color:#00ff88; padding:6px 14px; border-radius:999px; font-size:0.78rem; font-weight:700; display:flex; align-items:center; gap:4px;">✅ Verificado</span>
+              <span style="background:var(--bg-glass); border:1px solid var(--border-glow); color:var(--purple-glow); padding:6px 14px; border-radius:999px; font-size:0.78rem; font-weight:700; display:flex; align-items:center; gap:4px; transition: border-color 0.5s ease, color 0.5s ease;">📱 Android / APK</span>
+            </div>
+          </div>
+          
+          <!-- AI Version Highlights Panel -->
+          <div id="ai-version-features"></div>
+        </div>
+      </div>
+
+      <!-- Files grid -->
+      <div style="padding:32px;">
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:1rem; color:var(--text-muted); margin:0; font-weight:600;">Selecciona tu archivo:</h3>
+        </div>
+
+        <div class="downloads-grid" id="downloads-list">
+          <div style="grid-column:1/-1; padding:50px; text-align:center; color:var(--text-muted);">
+            <div class="status-dot loading" style="display:inline-block; margin-right:10px;"></div>
+            Buscando archivos de descarga...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info strip -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:24px;">
+      <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
+        <span style="font-size:2rem;">🔒</span>
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">100% Seguro</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Descarga desde GitHub oficial</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
+        <span style="font-size:2rem;">⚡</span>
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Siempre Actualizado</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Última versión automática</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
+        <span style="font-size:2rem;">🆓</span>
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Totalmente Gratis</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Sin pagos ni suscripciones</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-3" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
+        <span style="font-size:2rem;">📱</span>
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Android & +</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">32-bit y 64-bit disponibles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Installation guide -->
+    <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:16px; padding:32px; margin-top:24px;">
+      <h3 style="font-family:var(--font-cinzel); font-size:1.1rem; margin-bottom:24px; color:var(--text-primary);">📖 Guía de Instalación</h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:20px;">
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">1</div>
+          <div style="font-weight:700; font-size:0.88rem;">Elige tu versión</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">32-bit para teléfonos antiguos, 64-bit para los modernos. Con música o sin ella.</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">2</div>
+          <div style="font-weight:700; font-size:0.88rem;">Descarga el APK</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Haz clic en el botón y espera que termine la descarga completa.</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">3</div>
+          <div style="font-weight:700; font-size:0.88rem;">Permite fuentes externas</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Ve a Ajustes → Seguridad → Instalar apps desconocidas → Activar.</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--gold),#b8860b); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:#1a0a00;">4</div>
+          <div style="font-weight:700; font-size:0.88rem;">¡A jugar!</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Instala el APK, únete a Titan Community y disfruta. IP en la sección Servidor.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="Titan Community" />
+        <h3>Titan Community</h3>
+        <p>El servidor de Minecraft Bedrock más épico con addons exclusivos y una comunidad increíble. ¡Únete y vive la aventura!</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">🏠 Inicio</a></li>
+          <li><a href="servidor.html">⚔️ Servidor</a></li>
+          <li><a href="addons.html">🔮 Addons</a></li>
+          <li><a href="discord.html">💬 Discord</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Tiendas</h4>
+        <ul>
+          <li><a href="tienda.html">🛒 Tienda Premium</a></li>
+          <li><a href="canje.html">⭐ Puntos & Canje</a></li>
+          <li><a href="tienda.html#kits">⚔️ Kits</a></li>
+          <li><a href="tienda.html#mascotas">🐾 Mascotas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Comunidad</h4>
+        <ul>
+          <li><a href="https://discord.gg/titan-community" target="_blank">💬 Discord</a></li>
+          <li><a href="servidor.html">📋 Reglas</a></li>
+          <li><a href="servidor.html">📖 Guía</a></li>
+          <li><a href="servidor.html">🏆 Rankings</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2024 Titan Community · Todos los derechos reservados · No afiliado con Mojang Studios</p>
+      <div class="footer-social">
+        <a href="https://discord.gg/titan-community" target="_blank" class="social-btn" title="Discord">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.042.033.055a19.926 19.926 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/particles.js?v=2"></script>
+<script src="js/minecraft.js?v=2"></script>
+<script src="js/main.js?v=2"></script>
+<script src="js/ai-decorator.js"></script>
+</body>
+</html>
+
