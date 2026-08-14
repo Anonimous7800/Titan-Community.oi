@@ -436,33 +436,40 @@ function enrichKnown(known) {
   };
 }
 
-// FETCH ADDONS FROM GITHUB
+// FETCH ADDONS FROM GITHUB - loads ALL releases automatically
 async function fetchAddons() {
   try {
+    // Fetch ALL releases (not just one tag), so every new release appears automatically
     const response = await fetch(
-      'https://api.github.com/repos/Anonimous7800/practicas/releases/tags/addons',
+      'https://api.github.com/repos/Anonimous7800/practicas/releases',
       { headers: { 'Accept': 'application/vnd.github.v3+json' } }
     );
-    if (!response.ok) throw new Error('GitHub API error');
-    const data = await response.json();
+    if (!response.ok) throw new Error('GitHub API error ' + response.status);
+    const releases = await response.json();
 
-    if (data.assets && data.assets.length > 0) {
-      const resolved = await Promise.all(data.assets.map(async asset => {
-        // 1. Exact Match
+    // Flatten assets from ALL releases into one list
+    const allAssets = [];
+    releases.forEach(function(release) {
+      if (release.assets && release.assets.length > 0) {
+        release.assets.forEach(function(asset) {
+          allAssets.push(asset);
+        });
+      }
+    });
+
+    if (allAssets.length > 0) {
+      const resolved = await Promise.all(allAssets.map(async function(asset) {
         let known = KNOWN_ADDONS[asset.name];
         let isUpdate = false;
         let detectedVersion = null;
 
-        // 2. Fuzzy Match for Updates (Casi iguales)
         if (!known) {
           const matchResult = findCloseKnownMatch(asset.name);
           if (matchResult) {
             known = matchResult.addon;
             isUpdate = true;
             const verMatch = asset.name.match(/v\d+(\.\d+)*/i);
-            if (verMatch) {
-              detectedVersion = verMatch[0];
-            }
+            if (verMatch) detectedVersion = verMatch[0];
           }
         }
 
@@ -470,24 +477,24 @@ async function fetchAddons() {
         if (known) {
           meta = enrichKnown(known);
           if (isUpdate) {
-            if (detectedVersion) {
-              meta.version = detectedVersion + " (Actualizaci\u00f3n)";
-            } else {
-              meta.version = meta.version + " (Actualizado)";
-            }
+            meta.version = detectedVersion
+              ? detectedVersion + ' (Actualizaci\u00f3n)'
+              : (meta.version || 'v1.0') + ' (Actualizado)';
           }
         } else {
           meta = await resolveAddonMetadata(asset.name);
         }
         return buildAddon(asset, meta, 'browser_download_url');
       }));
-      // Deduplicate: keep only the latest version of each item
+
+      // Deduplicate: if same item appears in multiple releases, keep newest version
       return deduplicateByBaseName(resolved);
     }
   } catch (error) {
-    console.warn('Usando fallback local:', error);
+    console.warn('GitHub API no disponible, usando fallback local:', error);
   }
 
+  // FALLBACK - hardcoded assets if GitHub API is unavailable
   const localAssets = [
     { name: "CAVE.DWELLER.Add-On.Official.addon.mcaddon", size: 6887035, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/CAVE.DWELLER.Add-On.Official.addon.mcaddon" },
     { name: "CAVES.Fire.Ice.addon.mcaddon", size: 17906375, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/CAVES.Fire.Ice.addon.mcaddon" },
@@ -495,28 +502,15 @@ async function fetchAddons() {
     { name: "Over.Mob.Add-On.addon.mcaddon", size: 13901891, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Over.Mob.Add-On.addon.mcaddon" },
     { name: "Realight.Reimagined.addon.mcaddon", size: 316418, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Realight.Reimagined.addon.mcaddon" },
     { name: "Smartphones.2.0.Add-On.addon.mcaddon", size: 18703555, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Smartphones.2.0.Add-On.addon.mcaddon" },
-    { name: "Spacecraft.addon.mcaddon", size: 14066466, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Spacecraft.addon.mcaddon" }
+    { name: "Spacecraft.addon.mcaddon", size: 14066466, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Spacecraft.addon.mcaddon" },
+    { name: "Altfit.skin_pack.mcpack", size: 0, url: "https://github.com/Anonimous7800/practicas/releases/download/skins/Altfit.skin_pack.mcpack" }
   ];
 
-  return deduplicateByBaseName(await Promise.all(localAssets.map(async asset => {
-    let known = KNOWN_ADDONS[asset.name];
-    let isUpdate = false;
-    let detectedVersion = null;
-    if (!known) {
-      const matchResult = findCloseKnownMatch(asset.name);
-      if (matchResult) {
-        known = matchResult.addon;
-        isUpdate = true;
-        const verMatch = asset.name.match(/v\d+(\.\d+)*/i);
-        if (verMatch) detectedVersion = verMatch[0];
-      }
-    }
+  return deduplicateByBaseName(await Promise.all(localAssets.map(async function(asset) {
+    const known = KNOWN_ADDONS[asset.name];
     let meta;
     if (known) {
       meta = enrichKnown(known);
-      if (isUpdate) {
-        meta.version = detectedVersion ? detectedVersion + ' (Actualizaci\u00f3n)' : meta.version + ' (Actualizado)';
-      }
     } else {
       meta = await resolveAddonMetadata(asset.name);
     }
