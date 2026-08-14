@@ -1112,3 +1112,170 @@
 .dl-btn:hover {
   box-shadow: 0 0 15px rgba(123, 47, 255, 0.4);
 }
+
+/* ── DISCORD NOTICE BANNER ── */
+.discord-notice {
+  background: rgba(123, 47, 255, 0.08);
+  border: 1px solid rgba(123, 47, 255, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 40px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.discord-notice-icon {
+  font-size: 1.5rem;
+}
+
+.discord-notice-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.discord-notice-link {
+  color: var(--purple-glow);
+  font-weight: 700;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.discord-notice-link:hover {
+  color: #fff;
+}
+
+/* ── MOBILE RESPONSIVENESS REFINEMENTS FOR CELL PHONES (<= 768px) ── */
+@media (max-width: 768px) {
+  /* Discord Notice Banner */
+  .discord-notice {
+    padding: 16px 14px;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-radius: var(--radius-md);
+  }
+  .discord-notice-icon {
+    font-size: 1.25rem;
+  }
+  .discord-notice-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* AI Control Panel Mobile Layout */
+  .ai-control-panel {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .ai-status-badge {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .ai-status-badge .icon {
+    font-size: 1.8rem;
+  }
+
+  .ai-status-badge .status-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .type-count-badge {
+    margin: 2px;
+    font-size: 0.72rem;
+  }
+
+  /* Horizontal Scrolling Category Buttons (Tactile/Mobile Friendly) */
+  .addon-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -16px; /* Bleed to edges for full scroll area */
+    padding: 4px 16px 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+    gap: 8px;
+  }
+
+  .addon-filters::-webkit-scrollbar {
+    display: none; /* Hide scrollbar WebKit */
+  }
+
+  .filter-btn {
+    flex-shrink: 0; /* Keep buttons from shrinking */
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+
+  /* Rescan Button */
+  .btn-ai-rescan {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Grids and Cards */
+  .addons-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .addon-card {
+    min-height: auto; /* Allow content-based height on mobile */
+  }
+
+  .addon-image-wrapper {
+    height: 160px; /* Slightly shorter images on mobile */
+  }
+
+  .addon-content {
+    padding: 16px;
+  }
+
+  .addon-title {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .addon-desc {
+    font-size: 0.78rem;
+    margin-bottom: 12px;
+    -webkit-line-clamp: 4; /* Allow slightly more lines of desc on mobile */
+  }
+
+  .addon-meta {
+    padding-top: 10px;
+    font-size: 0.72rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* AI Scan Screen Mobile Adjustments */
+  .addon-card.scanning {
+    padding: 20px;
+    min-height: 280px;
+  }
+
+  .addon-loading-details {
+    gap: 12px;
+  }
+
+  .ai-logs {
+    max-height: 80px;
+  }
+}
+
