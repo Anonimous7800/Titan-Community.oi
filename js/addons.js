@@ -1,14 +1,31 @@
 ﻿/* =============================================
    ADDONS.JS - Dynamic loading of addons via GitHub
    API and AI-powered metadata decoration
-   Version 2.0 - Auto-detect + Marketplace Lookup
+   Version 2.1 - Auto-detect + Marketplace Lookup + Auto-update Detection
    ============================================= */
 
 // FILE TYPE DETECTOR
-// Detects content type from filename: addon, world, shader, texture
+// Detects content type from filename: addon, world, shader, texture, skin
 function detectFileType(fileName) {
   const f = fileName.toLowerCase();
 
+  // SKIN detection
+  if (
+    f.includes('skin') || f.includes('skins') || f.includes('persona') ||
+    f.includes('aspecto') || f.includes('aspectos')
+  ) {
+    return {
+      type: 'skin',
+      typeLabel: '\ud83d\udc65 Skin',
+      category: 'Skins',
+      badge: '\ud83d\udc65 Skin',
+      badgeClass: 'badge-skin',
+      defaultDesc: 'Pack de skins (aspectos) personalizado para cambiar la apariencia de tu personaje en el juego.',
+      downloadLabel: '\ud83d\udce5 Descargar Skins'
+    };
+  }
+
+  // SHADER detection
   if (
     f.includes('shader') || f.includes('shaders') || f.includes('rtx') ||
     f.includes('render') || f.includes('deferred') || f.includes('ray') ||
@@ -26,6 +43,7 @@ function detectFileType(fileName) {
     };
   }
 
+  // WORLD detection
   if (
     f.endsWith('.mctemplate') || f.endsWith('.mcworld') ||
     f.includes('world_template') || f.includes('_world')
@@ -41,6 +59,7 @@ function detectFileType(fileName) {
     };
   }
 
+  // TEXTURE detection
   if (
     f.includes('texture') || f.includes('textures') || f.includes('resource') ||
     f.includes('faithful') || f.includes('16x') || f.includes('32x') || f.includes('64x')
@@ -84,7 +103,7 @@ function setCache(key, value) {
 function cleanNameForSearch(fileName) {
   return fileName
     .replace(/\.(mcaddon|mctemplate|mcworld|mcpack|zip)$/gi, '')
-    .replace(/\.(addon|shader|texture|resource|behavior|world_template)/gi, '')
+    .replace(/\.(addon|shader|texture|resource|behavior|world_template|skin)/gi, '')
     .replace(/[\._\-]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -156,6 +175,8 @@ async function searchMarketplace(query) {
 // HEURISTIC CATEGORY DETECTOR
 function detectCategory(fileName) {
   const l = fileName.toLowerCase();
+  if (l.includes('skin') || l.includes('skins'))
+    return { category: 'Skins', badge: '\ud83d\udc65 Skins', badgeClass: 'badge-skin' };
   if (l.includes('cave') || l.includes('dweller') || l.includes('horror') || l.includes('spooky') || l.includes('scary') || l.includes('zombie') || l.includes('ghost'))
     return { category: 'Terror', badge: '\ud83d\udc80 Terror', badgeClass: 'badge-exclusive' };
   if (l.includes('fire') || l.includes('ice') || l.includes('dragon') || l.includes('magic') || l.includes('adventure') || l.includes('quest') || l.includes('element'))
@@ -190,6 +211,7 @@ const FALLBACK_IMAGES = {
   'Shaders':    'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=600&auto=format&fit=crop',
   'Mundos':     'https://images.unsplash.com/photo-1541855492-581f618f69a0?q=80&w=600&auto=format&fit=crop',
   'Texturas':   'https://images.unsplash.com/photo-1558591710-4b4a1ae0f004?q=80&w=600&auto=format&fit=crop',
+  'Skins':      'https://images.unsplash.com/photo-1560253023-3ec5d502959f?q=80&w=600&auto=format&fit=crop',
   'Addons':     'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop'
 };
 
@@ -283,6 +305,32 @@ function sanitizeId(str) {
   return str.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
 
+// FUZZY MATCHING FOR FILE UPDATES ("Casi iguales")
+function cleanBaseName(name) {
+  return name.toLowerCase()
+    .replace(/v\d+(\.\d+)*/gi, '') // remove v1, v2.3, v1.0.0
+    .replace(/(official|beta|alpha|update|upd|fix|patch)/gi, '') // remove labels
+    .replace(/\.(mcaddon|mctemplate|mcworld|mcpack|zip|addon|world_template|skin)/gi, '') // remove extensions
+    .replace(/[^a-z0-9]/gi, '') // strip special chars
+    .trim();
+}
+
+function findCloseKnownMatch(fileName) {
+  const cleanNew = cleanBaseName(fileName);
+  if (!cleanNew) return null;
+
+  for (const knownKey in KNOWN_ADDONS) {
+    const cleanKnown = cleanBaseName(knownKey);
+    if (cleanKnown === cleanNew || cleanNew.includes(cleanKnown) || cleanKnown.includes(cleanNew)) {
+      return {
+        key: knownKey,
+        addon: KNOWN_ADDONS[knownKey]
+      };
+    }
+  }
+  return null;
+}
+
 // AI METADATA RESOLUTION
 // For unknown addons: detect type, search Marketplace, build full metadata
 async function resolveAddonMetadata(fileName) {
@@ -294,9 +342,10 @@ async function resolveAddonMetadata(fileName) {
   try { marketResult = await searchMarketplace(searchQuery); } catch {}
 
   let catInfo;
-  if (fileType.type === 'shader')  catInfo = { category: 'Shaders',  badge: '\u2728 Shader',    badgeClass: 'badge-shader'  };
+  if (fileType.type === 'shader')       catInfo = { category: 'Shaders',  badge: '\u2728 Shader',    badgeClass: 'badge-shader'  };
   else if (fileType.type === 'world')   catInfo = { category: 'Mundos',   badge: '\ud83c\udf0d Mundo',    badgeClass: 'badge-world'   };
   else if (fileType.type === 'texture') catInfo = { category: 'Texturas', badge: '\ud83c\udfa8 Textura',  badgeClass: 'badge-texture' };
+  else if (fileType.type === 'skin')    catInfo = { category: 'Skins',    badge: '\ud83d\udc65 Skin',     badgeClass: 'badge-skin'    };
   else catInfo = detectCategory(fileName);
 
   return {
@@ -342,8 +391,14 @@ function enrichKnown(known) {
   const t = known.type || 'addon';
   return {
     ...known,
-    typeLabel: t === 'world' ? '\ud83c\udf0d Mundo' : t === 'shader' ? '\u2728 Shader' : t === 'texture' ? '\ud83c\udfa8 Textura' : '\u2699\ufe0f Addon',
-    downloadLabel: t === 'world' ? '\ud83d\udce5 Descargar Mundo' : t === 'shader' ? '\ud83d\udce5 Descargar Shader' : t === 'texture' ? '\ud83d\udce5 Descargar Textura' : '\ud83d\udce5 Descargar Addon',
+    typeLabel: t === 'world' ? '\ud83c\udf0d Mundo' :
+               t === 'shader' ? '\u2728 Shader' :
+               t === 'texture' ? '\ud83c\udfa8 Textura' :
+               t === 'skin' ? '\ud83d\udc65 Skin' : '\u2699\ufe0f Addon',
+    downloadLabel: t === 'world' ? '\ud83d\udce5 Descargar Mundo' :
+                   t === 'shader' ? '\ud83d\udce5 Descargar Shader' :
+                   t === 'texture' ? '\ud83d\udce5 Descargar Textura' :
+                   t === 'skin' ? '\ud83d\udce5 Descargar Skins' : '\ud83d\udce5 Descargar Addon',
     fromMarketplace: true,
     creator: null
   };
@@ -361,8 +416,37 @@ async function fetchAddons() {
 
     if (data.assets && data.assets.length > 0) {
       return await Promise.all(data.assets.map(async asset => {
-        const known = KNOWN_ADDONS[asset.name];
-        const meta = known ? enrichKnown(known) : await resolveAddonMetadata(asset.name);
+        // 1. Exact Match
+        let known = KNOWN_ADDONS[asset.name];
+        let isUpdate = false;
+        let detectedVersion = null;
+
+        // 2. Fuzzy Match for Updates (Casi iguales)
+        if (!known) {
+          const matchResult = findCloseKnownMatch(asset.name);
+          if (matchResult) {
+            known = matchResult.addon;
+            isUpdate = true;
+            const verMatch = asset.name.match(/v\d+(\.\d+)*/i);
+            if (verMatch) {
+              detectedVersion = verMatch[0];
+            }
+          }
+        }
+
+        let meta;
+        if (known) {
+          meta = enrichKnown(known);
+          if (isUpdate) {
+            if (detectedVersion) {
+              meta.version = detectedVersion + " (Actualizaci\u00f3n)";
+            } else {
+              meta.version = meta.version + " (Actualizado)";
+            }
+          }
+        } else {
+          meta = await resolveAddonMetadata(asset.name);
+        }
         return buildAddon(asset, meta, 'browser_download_url');
       }));
     }
@@ -381,8 +465,35 @@ async function fetchAddons() {
   ];
 
   return await Promise.all(localAssets.map(async asset => {
-    const known = KNOWN_ADDONS[asset.name];
-    const meta = known ? enrichKnown(known) : await resolveAddonMetadata(asset.name);
+    let known = KNOWN_ADDONS[asset.name];
+    let isUpdate = false;
+    let detectedVersion = null;
+
+    if (!known) {
+      const matchResult = findCloseKnownMatch(asset.name);
+      if (matchResult) {
+        known = matchResult.addon;
+        isUpdate = true;
+        const verMatch = asset.name.match(/v\d+(\.\d+)*/i);
+        if (verMatch) {
+          detectedVersion = verMatch[0];
+        }
+      }
+    }
+
+    let meta;
+    if (known) {
+      meta = enrichKnown(known);
+      if (isUpdate) {
+        if (detectedVersion) {
+          meta.version = detectedVersion + " (Actualizaci\u00f3n)";
+        } else {
+          meta.version = meta.version + " (Actualizado)";
+        }
+      }
+    } else {
+      meta = await resolveAddonMetadata(asset.name);
+    }
     return buildAddon({ ...asset, download_count: 0 }, meta, 'url');
   }));
 }
@@ -406,7 +517,7 @@ function renderControlPanel(container, addonsCount) {
     'Survival': '\ud83d\udee1\ufe0f', 'Mobs': '\ud83d\udc7e', 'Realismo': '\ud83d\udca1',
     'Tecnologia': '\ud83d\udcf1', 'Espacio': '\ud83d\ude80', 'Vehiculos': '\ud83d\ude97',
     'RPG': '\u2694\ufe0f', 'Shaders': '\u2728', 'Mundos': '\ud83c\udf0d',
-    'Texturas': '\ud83c\udfa8', 'Addons': '\u2699\ufe0f'
+    'Texturas': '\ud83c\udfa8', 'Skins': '\ud83d\udc65', 'Addons': '\u2699\ufe0f'
   };
 
   const filterHtml = categories.map(cat => {
@@ -419,7 +530,8 @@ function renderControlPanel(container, addonsCount) {
     currentAddons.filter(a => a.type === 'addon').length > 0 ? '<span class="type-count-badge">\u2699\ufe0f ' + currentAddons.filter(a => a.type === 'addon').length + ' Addons</span>' : '',
     currentAddons.filter(a => a.type === 'world').length > 0 ? '<span class="type-count-badge">\ud83c\udf0d ' + currentAddons.filter(a => a.type === 'world').length + ' Mundos</span>' : '',
     currentAddons.filter(a => a.type === 'shader').length > 0 ? '<span class="type-count-badge">\u2728 ' + currentAddons.filter(a => a.type === 'shader').length + ' Shaders</span>' : '',
-    currentAddons.filter(a => a.type === 'texture').length > 0 ? '<span class="type-count-badge">\ud83c\udfa8 ' + currentAddons.filter(a => a.type === 'texture').length + ' Texturas</span>' : ''
+    currentAddons.filter(a => a.type === 'texture').length > 0 ? '<span class="type-count-badge">\ud83c\udfa8 ' + currentAddons.filter(a => a.type === 'texture').length + ' Texturas</span>' : '',
+    currentAddons.filter(a => a.type === 'skin').length > 0 ? '<span class="type-count-badge">\ud83d\udc65 ' + currentAddons.filter(a => a.type === 'skin').length + ' Skins</span>' : ''
   ].filter(Boolean).join('');
 
   panel.innerHTML =
@@ -479,6 +591,14 @@ function runAIScanningSimulation(addon, index) {
       { progress: 75, log: addon.fromMarketplace ? '[OK] Imagen de Marketplace encontrada! v' : '[AI-IMG] Imagen semantica asignada.' },
       { progress: 90, log: '[AI-NLG] Descripcion de estilo generada.' },
       { progress: 100, log: '[OK] Textura indexada correctamente.' }
+    ],
+    'skin': [
+      { progress: 15, log: '[DETECT] Tipo: ASPECTOS / SKINS (.mcpack)' },
+      { progress: 35, log: '[TEX] Analizando mapeo UV de skins...' },
+      { progress: 55, log: '[Marketplace] Buscando catalogo de skins...' },
+      { progress: 75, log: addon.fromMarketplace ? '[OK] Imagen oficial encontrada! v' : '[AI-IMG] Skin asignado por categoria.' },
+      { progress: 90, log: '[AI] Descripcion de skins generada.' },
+      { progress: 100, log: '[OK] Skins indexadas correctamente.' }
     ],
     'addon': [
       { progress: 15, log: '[NLP] Indexando: ' + addon.fileName },
@@ -582,7 +702,7 @@ window.triggerAIScan = async function() {
           '<div class="ai-log-line muted">Identificando tipo de archivo...</div>' +
         '</div>' +
       '</div>' +
-      '<div class="addon-meta"><span>\ud83d\udcbe ' + addon.size + '</span><span>\ud83e\udd16 AI Engine v2.0</span></div>' +
+      '<div class="addon-meta"><span>\ud83d\udcbe ' + addon.size + '</span><span>\ud83e\udd16 AI Engine v2.1</span></div>' +
     '</div>';
   }).join('');
 
@@ -601,7 +721,7 @@ async function initAddonsSystem() {
       '<div class="ai-status-dot pulse" style="width:16px; height:16px; margin:0 auto 16px;"></div>' +
       '<h3 style="font-family:\'Cinzel\',serif; font-size:1.3rem; margin-bottom:12px;">\ud83e\udd16 IA buscando en GitHub y Marketplace...</h3>' +
       '<p style="color:var(--text-muted); font-size:0.9rem; max-width:460px; margin:0 auto;">' +
-        'Descargando release, detectando tipos (addon / mundo / shader / textura) y buscando imagenes en la Marketplace. Espere...' +
+        'Descargando release, detectando tipos (addon / mundo / shader / textura / skins) y buscando imagenes en la Marketplace. Espere...' +
       '</p>' +
     '</div>';
 
