@@ -791,6 +791,12 @@
   font-weight: 800;
   box-shadow: 0 0 12px rgba(255, 111, 145, 0.4);
 }
+.badge-skin {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0 12px rgba(79, 172, 254, 0.4);
+}
 .badge-exclusive {
   background: linear-gradient(135deg, #a855f7, #7c3aed);
   color: #fff;
