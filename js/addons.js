@@ -1,4 +1,4 @@
-﻿/* =============================================
+/* =============================================
    ADDONS.JS - Dynamic loading of addons via GitHub
    API and AI-powered metadata decoration
    Version 2.1 - Auto-detect + Marketplace Lookup + Auto-update Detection
@@ -315,6 +315,16 @@ function cleanBaseName(name) {
     .trim();
 }
 
+// Extract numeric version for comparison (e.g. "v2.3" -> 2.3, "v10" -> 10, no version -> 0)
+function extractVersionNumber(fileName) {
+  const match = fileName.match(/v(\d+(?:\.\d+)*)/i);
+  if (!match) return 0;
+  // Convert "2.3.1" -> 2.0031, "2" -> 2, "1.10" -> 1.10
+  return match[1].split('.').reduce(function(acc, part, i) {
+    return acc + parseInt(part, 10) / Math.pow(1000, i);
+  }, 0);
+}
+
 function findCloseKnownMatch(fileName) {
   const cleanNew = cleanBaseName(fileName);
   if (!cleanNew) return null;
@@ -329,6 +339,28 @@ function findCloseKnownMatch(fileName) {
     }
   }
   return null;
+}
+
+// DEDUPLICATION - keeps only the latest version of each item
+// Groups resolved addons by their clean base name.
+// If two files match the same base name, only the one with the highest version number is kept.
+function deduplicateByBaseName(addons) {
+  const map = {};
+  addons.forEach(function(addon) {
+    const key = cleanBaseName(addon.fileName);
+    if (!key) return;
+    if (!map[key]) {
+      map[key] = addon;
+    } else {
+      // Compare version numbers extracted from the original file names
+      const existingVer = extractVersionNumber(map[key].fileName);
+      const newVer = extractVersionNumber(addon.fileName);
+      if (newVer > existingVer) {
+        map[key] = addon; // Replace with newer version
+      }
+    }
+  });
+  return Object.values(map);
 }
 
 // AI METADATA RESOLUTION
@@ -415,7 +447,7 @@ async function fetchAddons() {
     const data = await response.json();
 
     if (data.assets && data.assets.length > 0) {
-      return await Promise.all(data.assets.map(async asset => {
+      const resolved = await Promise.all(data.assets.map(async asset => {
         // 1. Exact Match
         let known = KNOWN_ADDONS[asset.name];
         let isUpdate = false;
@@ -449,6 +481,8 @@ async function fetchAddons() {
         }
         return buildAddon(asset, meta, 'browser_download_url');
       }));
+      // Deduplicate: keep only the latest version of each item
+      return deduplicateByBaseName(resolved);
     }
   } catch (error) {
     console.warn('Usando fallback local:', error);
@@ -464,38 +498,30 @@ async function fetchAddons() {
     { name: "Spacecraft.addon.mcaddon", size: 14066466, url: "https://github.com/Anonimous7800/practicas/releases/download/addons/Spacecraft.addon.mcaddon" }
   ];
 
-  return await Promise.all(localAssets.map(async asset => {
+  return deduplicateByBaseName(await Promise.all(localAssets.map(async asset => {
     let known = KNOWN_ADDONS[asset.name];
     let isUpdate = false;
     let detectedVersion = null;
-
     if (!known) {
       const matchResult = findCloseKnownMatch(asset.name);
       if (matchResult) {
         known = matchResult.addon;
         isUpdate = true;
         const verMatch = asset.name.match(/v\d+(\.\d+)*/i);
-        if (verMatch) {
-          detectedVersion = verMatch[0];
-        }
+        if (verMatch) detectedVersion = verMatch[0];
       }
     }
-
     let meta;
     if (known) {
       meta = enrichKnown(known);
       if (isUpdate) {
-        if (detectedVersion) {
-          meta.version = detectedVersion + " (Actualizaci\u00f3n)";
-        } else {
-          meta.version = meta.version + " (Actualizado)";
-        }
+        meta.version = detectedVersion ? detectedVersion + ' (Actualizaci\u00f3n)' : meta.version + ' (Actualizado)';
       }
     } else {
       meta = await resolveAddonMetadata(asset.name);
     }
     return buildAddon({ ...asset, download_count: 0 }, meta, 'url');
-  }));
+  })));
 }
 
 // CONTROL PANEL
