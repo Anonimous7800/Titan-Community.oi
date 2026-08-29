@@ -313,7 +313,7 @@ function downloadReceipt() {
     '',
     '  Tu item será activado en el servidor en las próximas',
     '  24 horas hábiles tras confirmar el pago en PayPal.',
-    '  Soporte: discord.gg/titan-community',
+    '  Soporte: discord.gg/dDYRCn6gdM',
     '',
     separator,
     '          © Titan Community - No afiliado con Mojang',
