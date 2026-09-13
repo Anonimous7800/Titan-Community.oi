@@ -1063,15 +1063,50 @@
         flex-wrap: wrap;
       }
 
-      /* Responsive para Modales de Auth, Perfil e Inventario */
-      @media (max-width: 640px) {
-        .inventory-dialog {
-          padding: 20px 16px;
-          border-radius: var(--radius-lg, 16px);
-          max-height: 95vh;
+      @keyframes slideUpSheet {
+        from {
+          transform: translateY(100%);
+          opacity: 0.5;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive para Modales de Auth, Perfil e Inventario en Móvil y Tablet */
+      @media (max-width: 768px) {
+        .modal-overlay {
+          padding: 0 !important;
+          align-items: flex-end !important;
+          justify-content: center !important;
+          z-index: 100050 !important;
+        }
+        .profile-app-dialog,
+        .inventory-dialog,
+        .google-modal-dialog,
+        .discord-modal-dialog,
+        .auth-dialog {
+          padding: 14px 16px calc(24px + env(safe-area-inset-bottom, 12px)) !important;
+          border-radius: 24px 24px 0 0 !important;
+          max-height: 90vh !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          margin-top: auto !important;
+          border: 1px solid rgba(123, 47, 255, 0.5) !important;
+          border-bottom: none !important;
+          background: #0d0c19 !important;
+          background: linear-gradient(180deg, #141326 0%, #090914 100%) !important;
+          box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(123, 47, 255, 0.25) !important;
+          transform: translateY(0) !important;
+          animation: slideUpSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch !important;
         }
         .inv-stats-bar {
-          gap: 8px;
+          gap: 6px;
         }
         .inv-stat-chip {
           flex: 1 1 calc(50% - 4px);
@@ -1082,60 +1117,125 @@
           grid-template-columns: 1fr;
           max-height: 52vh;
         }
-        .profile-app-dialog {
-          padding: 16px 14px 26px !important;
-          border-radius: 22px 22px 0 0 !important;
-          max-height: 92vh !important;
-          width: 100vw !important;
-          max-width: 100vw !important;
-          box-sizing: border-box !important;
-          margin-top: auto !important;
-        }
         .profile-tabs-nav {
           display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          flex-shrink: 0 !important;
+          min-height: 44px !important;
           overflow-x: auto !important;
           -webkit-overflow-scrolling: touch !important;
           scrollbar-width: none !important;
           white-space: nowrap !important;
-          border-radius: 12px !important;
-          gap: 5px !important;
+          border-radius: 14px !important;
+          gap: 6px !important;
           padding: 4px !important;
           margin-bottom: 14px !important;
-          -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
+          background: rgba(0, 0, 0, 0.5) !important;
+          border: 1px solid rgba(199, 125, 255, 0.25) !important;
+          box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+          box-sizing: border-box !important;
         }
         .profile-tabs-nav::-webkit-scrollbar { display: none !important; }
         .profile-tab-btn {
-          flex: 0 0 auto !important;
-          padding: 8px 12px !important;
-          font-size: 0.76rem !important;
+          flex: 1 1 0 !important;
+          min-height: 36px !important;
+          padding: 7px 10px !important;
+          font-size: 0.74rem !important;
+          font-weight: 700 !important;
           white-space: nowrap !important;
+          border-radius: 10px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 5px !important;
+          flex-shrink: 0 !important;
+          box-sizing: border-box !important;
         }
         .profile-banner-card {
-          flex-direction: column !important;
-          text-align: center !important;
+          display: flex !important;
+          flex-direction: row !important;
           align-items: center !important;
-          padding: 14px 12px !important;
-          gap: 12px !important;
+          justify-content: flex-start !important;
+          text-align: left !important;
+          padding: 14px !important;
+          gap: 14px !important;
+          border-radius: 16px !important;
+          margin-bottom: 14px !important;
+          background: linear-gradient(135deg, rgba(123,47,255,0.25) 0%, rgba(20,10,40,0.8) 100%) !important;
+          border: 1px solid rgba(199, 125, 255, 0.3) !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          flex-shrink: 0 !important;
+          overflow: hidden !important;
         }
-        .profile-banner-card > div {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
+        .profile-banner-card .profile-avatar-wrapper {
+          position: relative !important;
+          display: inline-block !important;
+          width: 66px !important;
+          height: 66px !important;
+          max-width: 66px !important;
+          flex: 0 0 66px !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
-        .profile-skin-cube {
-          width: 76px !important;
-          height: 76px !important;
+        .profile-banner-card .profile-skin-cube {
+          width: 66px !important;
+          height: 66px !important;
+          border-radius: 14px !important;
+          border: 2px solid var(--gold) !important;
+          box-shadow: 0 0 20px rgba(255,215,0,0.4) !important;
+          object-fit: cover !important;
+          display: block !important;
+          flex-shrink: 0 !important;
+        }
+        .profile-avatar-change-btn {
+          position: absolute !important;
+          bottom: -3px !important;
+          right: -3px !important;
+          width: 26px !important;
+          height: 26px !important;
+          font-size: 0.82rem !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          border-radius: 50% !important;
+          z-index: 5 !important;
+          border: 2px solid #141428 !important;
+          background: linear-gradient(135deg, #ffd700, #ff6b35) !important;
+          color: #1a0a00 !important;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.7) !important;
+        }
+        .profile-banner-info {
+          flex: 1 1 auto !important;
+          min-width: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          justify-content: center !important;
+          gap: 3px !important;
+          width: calc(100% - 80px) !important;
+        }
+        .profile-banner-info h2 {
+          font-size: 1.15rem !important;
+          line-height: 1.2 !important;
+          margin: 0 !important;
+          color: #fff !important;
+          word-break: break-word !important;
         }
         .profile-stats-grid {
           grid-template-columns: repeat(2, 1fr) !important;
           gap: 8px !important;
+          margin-bottom: 14px !important;
         }
         .profile-stat-box {
           padding: 10px 12px !important;
+          border-radius: 10px !important;
+          background: rgba(255, 255, 255, 0.035) !important;
+          border: 1px solid rgba(255, 255, 255, 0.07) !important;
         }
         .profile-stat-value {
-          font-size: 1.15rem !important;
+          font-size: 1.1rem !important;
         }
         .profile-grid-2col {
           grid-template-columns: 1fr !important;
@@ -1279,19 +1379,25 @@
 
       /* ── PERFIL DE JUGADOR & APP HUB MODAL ── */
       .profile-app-dialog {
-        max-width: 660px;
-        width: min(94vw, 660px);
-        max-height: min(90vh, 840px);
         background: linear-gradient(180deg, #141428 0%, #0a0a14 100%);
         border: 1px solid rgba(199, 125, 255, 0.3);
         border-radius: 22px;
         box-shadow: 0 30px 100px rgba(0,0,0,0.95), 0 0 60px rgba(123,47,255,0.3), inset 0 1px 0 rgba(255,255,255,0.22);
-        padding: clamp(20px, 3.5vw, 28px);
         display: flex;
         flex-direction: column;
-        animation: scaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         position: relative;
         overflow-y: auto;
+      }
+      @media (min-width: 769px) {
+        .profile-app-dialog {
+          max-width: 660px !important;
+          width: min(94vw, 660px) !important;
+          max-height: min(90vh, 840px) !important;
+          padding: 26px 28px !important;
+          border-radius: 22px !important;
+          margin: auto !important;
+          animation: scaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
       }
       .profile-app-dialog::-webkit-scrollbar {
         width: 6px;
@@ -1321,6 +1427,23 @@
         position: absolute;
         top: 0; left: 0; right: 0; height: 1px;
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      }
+      .profile-banner-info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .profile-edit-avatar-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 18px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        margin-bottom: 18px;
       }
       .profile-skin-cube {
         width: 88px;
@@ -1653,8 +1776,10 @@
     const modalDiv = document.createElement('div');
     modalDiv.className = 'modal-overlay';
     modalDiv.id = 'authModal';
+    modalDiv.style.zIndex = '100050';
     modalDiv.innerHTML = `
-      <div class="modal" style="max-width: 440px; padding: 28px;">
+      <div class="modal auth-dialog" style="max-width: 440px; padding: 28px;">
+        <div class="user-dropdown-handle" style="margin: 0 auto 12px auto;"></div>
         <div class="modal-header" style="margin-bottom: 16px;">
           <h3 class="font-cinzel" style="font-size: 1.2rem; color: var(--gold);" id="authModalTitle">👤 Cuenta de Jugador</h3>
           <button class="modal-close" onclick="closeAuthModal()">✕</button>
@@ -1738,9 +1863,10 @@
     const div = document.createElement('div');
     div.className = 'modal-overlay';
     div.id = 'googleAuthModal';
-    div.style.zIndex = '3100';
+    div.style.zIndex = '100050';
     div.innerHTML = `
       <div class="google-modal-dialog" style="max-width: 460px; padding: 28px 24px; position: relative;">
+        <div class="user-dropdown-handle" style="margin: 0 auto 12px auto;"></div>
         <button class="modal-close" onclick="closeGoogleAuthModal()" style="position: absolute; top: 16px; right: 16px;">✕</button>
 
         <!-- Google Official Header -->
@@ -2171,9 +2297,10 @@
     const div = document.createElement('div');
     div.className = 'modal-overlay';
     div.id = 'discordAuthModal';
-    div.style.zIndex = '3100';
+    div.style.zIndex = '100050';
     div.innerHTML = `
       <div class="discord-modal-dialog" style="max-width: 460px; padding: 28px 24px; position: relative;">
+        <div class="user-dropdown-handle" style="margin: 0 auto 12px auto;"></div>
         <button class="modal-close" onclick="closeDiscordAuthModal()" style="position: absolute; top: 16px; right: 16px;">✕</button>
 
         <!-- Discord Official Header -->
@@ -3258,9 +3385,12 @@
     const div = document.createElement('div');
     div.className = 'modal-overlay';
     div.id = 'inventoryModal';
-    div.style.zIndex = '3100';
+    div.style.zIndex = '100050';
     div.innerHTML = `
       <div class="inventory-dialog">
+        <!-- Handle táctil para celular -->
+        <div class="user-dropdown-handle" style="margin: 2px auto 14px auto;"></div>
+
         <!-- Cabecera del Inventario -->
         <div class="inventory-header">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -3639,9 +3769,12 @@
     const div = document.createElement('div');
     div.className = 'modal-overlay';
     div.id = 'profileAppModal';
-    div.style.zIndex = '3100';
+    div.style.zIndex = '100050';
     div.innerHTML = `
       <div class="profile-app-dialog">
+        <!-- Handle táctil para celular -->
+        <div class="user-dropdown-handle" style="margin: 2px auto 14px auto;"></div>
+
         <!-- Header con Título y Cierre -->
         <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:14px;">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -3654,13 +3787,13 @@
         <!-- Barra de Pestañas del Perfil -->
         <div class="profile-tabs-nav">
           <button type="button" class="profile-tab-btn active" id="profTabBtnSummary" onclick="switchProfileTab('summary')">
-            <span>📊</span> <span>Resumen & App</span>
+            <span>📊</span> <span>Resumen</span>
           </button>
           <button type="button" class="profile-tab-btn" id="profTabBtnCustomize" onclick="switchProfileTab('customize')">
-            <span>🎨</span> <span>Cambiar Foto & Perfil</span>
+            <span>🎨</span> <span>Foto & Perfil</span>
           </button>
           <button type="button" class="profile-tab-btn" id="profTabBtnSecurity" onclick="switchProfileTab('security')">
-            <span>🔒</span> <span>Seguridad & Cuenta</span>
+            <span>🔒</span> <span>Seguridad</span>
           </button>
         </div>
 
@@ -3674,9 +3807,9 @@
                 📷
               </button>
             </div>
-            <div style="flex:1; min-width:0;">
+            <div class="profile-banner-info" style="flex:1; min-width:0;">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
-                <h2 id="profileAppNick" style="font-family:'Cinzel',serif; font-size:1.4rem; color:#fff; margin:0; font-weight:800;">Cargando...</h2>
+                <h2 id="profileAppNick" style="font-family:'Cinzel',serif; font-size:1.35rem; color:#fff; margin:0; font-weight:800;">Cargando...</h2>
                 <span id="profileAppRoleBadge" style="background:var(--purple-main); color:#fff; font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase;">JUGADOR</span>
               </div>
               <div id="profileAppBio" style="font-size:0.84rem; color:#f1f5f9; margin-bottom:6px; line-height:1.4; font-style:italic; display:none;"></div>
