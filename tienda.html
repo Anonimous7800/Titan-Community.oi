@@ -34,7 +34,7 @@
       <div class="nav-cta">
         <a href="canje.html" class="btn btn-secondary btn-sm">⭐ Mis Puntos</a>
       </div>
-      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
@@ -48,16 +48,129 @@
   </div>
 </div>
 
-<div class="store-content" style="padding: 80px 0 120px;">
+<div class="store-tabs">
   <div class="container">
-    <div style="padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(123,47,255,0.3); margin: 40px auto; max-width: 600px;">
-      <div style="font-size: 4rem; margin-bottom: 20px;">🚧</div>
-      <h3 style="color: var(--purple-glow); font-family: var(--font-cinzel); font-size: 2rem; margin-bottom: 12px;">PRÓXIMAMENTE</h3>
-      <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">La tienda premium oficial está en desarrollo. Pronto podrás adquirir kits, rangos y mascotas exclusivas.</p>
+    <div class="tabs-list">
+      <button class="tab-btn active" id="tab-kits" onclick="switchTab('kits', this)">
+        <span>⚔️ Kits</span>
+        <span class="tab-count">4</span>
+      </button>
+      <button class="tab-btn" id="tab-rangos" onclick="switchTab('rangos', this)">
+        <span>👑 Rangos</span>
+        <span class="tab-count">4</span>
+      </button>
+      <button class="tab-btn" id="tab-mascotas" onclick="switchTab('mascotas', this)">
+        <span>🐾 Mascotas</span>
+        <span class="tab-count">4</span>
+      </button>
+      <button class="tab-btn" id="tab-especiales" onclick="switchTab('especiales', this)">
+        <span>✨ Especiales</span>
+        <span class="tab-count">4</span>
+      </button>
     </div>
   </div>
 </div>
 
+<div class="store-content">
+  <div class="container">
+    <div class="tab-panel active" id="panel-kits">
+      <div class="products-grid"></div>
+    </div>
+    <div class="tab-panel" id="panel-rangos">
+      <div class="products-grid"></div>
+    </div>
+    <div class="tab-panel" id="panel-mascotas">
+      <div class="products-grid"></div>
+    </div>
+    <div class="tab-panel" id="panel-especiales">
+      <div class="products-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BOTÓN FLOTANTE DEL CARRITO ══════ -->
+<div class="cart-float">
+  <button class="cart-btn" id="cartBtn" onclick="toggleCart()" aria-label="Ver carrito">
+    <span>🛒</span>
+    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+  </button>
+</div>
+
+<!-- ══════ PANEL LATERAL DEL CARRITO ══════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-header">
+    <h3>🛒 Tu Carrito</h3>
+    <button class="modal-close" onclick="toggleCart()" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-panel-footer" style="padding:20px 28px; border-top:1px solid var(--border-subtle); background:rgba(13,13,26,0.95);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <span style="color:var(--text-muted); font-size:0.9rem;">Subtotal</span>
+      <span id="cartTotal" style="font-family:'Cinzel',serif; font-size:1.4rem; font-weight:800; color:var(--gold);">$0.00</span>
+    </div>
+    <button class="buy-btn gold-btn" onclick="openPayment()" style="width:100%; font-size:1rem; padding:13px;">
+      💎 Proceder al Pago
+    </button>
+  </div>
+</div>
+
+<!-- ══════ MODAL DE PAGO / CHECKOUT ══════ -->
+<div class="modal-overlay" id="paymentModal" onclick="if(event.target===this)closePayment()">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h3 class="font-cinzel" style="font-size:1.15rem;">💳 Finalizar Pedido</h3>
+      <button class="modal-close" onclick="closePayment()">✕</button>
+    </div>
+    
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label" style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-secondary); font-weight:600;">
+        🎮 Tu Nick de Minecraft Bedrock (exacto)
+      </label>
+      <input type="text" id="playerNick" class="form-input" placeholder="Ej: SteveTitan99" style="width:100%; padding:12px 14px; background:rgba(13,13,26,0.8); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:var(--text-primary); outline:none; font-family:'Inter',sans-serif;" />
+    </div>
+
+    <div class="order-summary" id="orderSummary" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px; margin-bottom:20px;"></div>
+
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+      <button class="buy-btn gold-btn" id="btnPayWithPayPal" onclick="processPayment('paypal')" style="width:100%; font-size:0.95rem; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span>🟡 Pagar con Cuenta o Saldo PayPal</span>
+      </button>
+      <button class="btn btn-secondary" id="btnPayWithCard" onclick="processPayment('card')" style="width:100%; font-size:0.88rem; padding:11px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); color:#fff; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:var(--radius-md); font-weight:700;">
+        <span>💳 Pagar con Tarjeta Débito / Crédito (vía PayPal)</span>
+      </button>
+    </div>
+    
+    <div style="text-align:center; margin-bottom:12px;">
+      <button type="button" onclick="closePayment(); promptValidatePayPal();" style="background:transparent; border:none; color:var(--gold); font-size:0.78rem; text-decoration:underline; cursor:pointer; font-weight:600;">
+        ⚡ ¿Ya enviaste tu pago por PayPal? Validar Transacción existente ➔
+      </button>
+    </div>
+
+    <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;">
+      <span>🔒 Pago 100% seguro cifrado por PayPal · Activación automática con /claim</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL DE COMPROBANTE ══════ -->
+<div class="modal-overlay" id="receiptModal" onclick="if(event.target===this)closeReceipt()">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 class="font-cinzel" style="font-size:1.15rem;">📄 Comprobante de Compra</h3>
+      <button class="modal-close" onclick="closeReceipt()">✕</button>
+    </div>
+    <div id="receiptBody"></div>
+    <div style="margin-top:20px; display:flex; gap:10px;">
+      <button class="btn btn-secondary" onclick="downloadReceipt()" style="flex:1; justify-content:center;">
+        💾 Descargar Recibo (.txt)
+      </button>
+      <button class="btn btn-primary" onclick="closeReceipt()" style="flex:1; justify-content:center;">
+        Aceptar
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -100,9 +213,16 @@
   </div>
 </footer>
 
-<script src="js/particles.js"></script>
-<script src="js/main.js"></script>
-<script src="js/ai-decorator.js"></script>
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/particles.js?v=3"></script>
+<script src="js/minecraft.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
+<script src="js/auth.js?v=3"></script>
+<script src="js/productos.js?v=3"></script>
+<script src="js/tienda.js?v=3"></script>
+<script src="js/ai-decorator.js?v=3"></script>
 </body>
 </html>
 

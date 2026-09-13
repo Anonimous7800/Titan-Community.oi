@@ -9,7 +9,7 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding-top: 90px;
+  padding-top: clamp(100px, 14vh, 130px);
 }
 
 .hero::before {
@@ -24,7 +24,7 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 680px;
+  max-width: min(680px, 100%);
   padding-top: 40px;
   padding-bottom: 80px;
 }
@@ -42,6 +42,12 @@
   color: #00ff88;
   letter-spacing: 0.05em;
   margin-bottom: 28px;
+  animation: heroBadgePulse 3s ease-in-out infinite;
+}
+
+@keyframes heroBadgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
+  50%       { box-shadow: 0 0 12px 3px rgba(0,255,136,0.2); }
 }
 
 .hero-title {
@@ -85,20 +91,22 @@
 .hero-stats {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0;
   background: rgba(13,13,26,0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(16px);
-  padding: 20px 28px;
+  padding: 16px 20px;
   width: fit-content;
+  max-width: 100%;
 }
 
 .hero-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 18px;
 }
 
 .hero-stat-divider {
@@ -147,10 +155,20 @@
   object-fit: contain;
   border-radius: 50%;
   border: 3px solid rgba(123,47,255,0.4);
-  box-shadow: 0 0 60px rgba(123,47,255,0.3), 0 0 120px rgba(123,47,255,0.15);
-  animation: float 6s ease-in-out infinite;
+  box-shadow: 0 0 60px rgba(123,47,255,0.3), 0 0 120px rgba(123,47,255,0.15), 0 0 180px rgba(123,47,255,0.08);
+  animation: float 6s ease-in-out infinite, logoGlow 4s ease-in-out infinite alternate;
   position: relative;
   z-index: 2;
+  transition: box-shadow 0.3s;
+}
+
+.hero-logo-img:hover {
+  box-shadow: 0 0 80px rgba(123,47,255,0.5), 0 0 160px rgba(123,47,255,0.25);
+}
+
+@keyframes logoGlow {
+  from { border-color: rgba(123,47,255,0.3); }
+  to   { border-color: rgba(199,125,255,0.7); }
 }
 
 .hero-logo-ring {
@@ -213,6 +231,31 @@
 @keyframes scroll-anim {
   0%   { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(10px); }
+}
+
+/* ── SERVER IP COPY BOXES ────────────────────── */
+.server-ip-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8,8,15,0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.25s var(--transition);
+}
+
+.server-ip-copy:hover {
+  background: rgba(123,47,255,0.12);
+  border-color: var(--purple-main);
+  box-shadow: 0 0 16px rgba(123,47,255,0.2);
+  transform: translateY(-2px);
+}
+
+.server-ip-copy.copied {
+  background: rgba(0,255,136,0.08);
+  border-color: rgba(0,255,136,0.4);
 }
 
 /* ── SECTION ─────────────────────────────────── */
@@ -1065,34 +1108,61 @@
 }
 
 /* ── RESPONSIVE ──────────────────────────────── */
+
+/* Ajuste suave 1200–1024px: zoom ~125% en monitores HD */
 @media (max-width: 1200px) {
-  .hero-logo-float { right: 4%; width: 300px; height: 300px; }
-  .hero-logo-img { width: 220px; height: 220px; }
-  .ring-1 { width: 260px; height: 260px; }
-  .ring-2 { width: 300px; height: 300px; }
-  .ring-3 { width: 340px; height: 340px; }
+  .hero-logo-float { right: 2%; width: 280px; height: 280px; }
+  .hero-logo-img { width: 200px; height: 200px; }
+  .ring-1 { width: 240px; height: 240px; }
+  .ring-2 { width: 270px; height: 270px; }
+  .ring-3 { width: 300px; height: 300px; }
   .addons-grid { grid-template-columns: repeat(2, 1fr); }
-  .server-layout { grid-template-columns: 380px 1fr; }
+  .server-layout { grid-template-columns: 340px 1fr; }
 }
 
-@media (max-width: 960px) {
+/* Colapso principal: zoom 200% (1920px → ~960px) o tablets */
+@media (max-width: 1024px) {
+  /* Hero se apila verticalmente */
   .hero { flex-direction: column-reverse; justify-content: center; padding-top: 120px; padding-bottom: 40px; }
-  .hero-logo-float { display: flex; position: relative; right: auto; top: auto; transform: none; width: 240px; height: 240px; margin: 0 auto 30px; }
-  .hero-logo-img { width: 180px; height: 180px; }
-  .ring-1 { width: 200px; height: 200px; }
-  .ring-2 { width: 220px; height: 220px; }
-  .ring-3 { width: 240px; height: 240px; }
-  .hero-content { max-width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; padding-top: 0; padding-bottom: 20px; }
+  .hero-logo-float {
+    display: flex;
+    position: relative; right: auto; top: auto; transform: none;
+    width: 220px; height: 220px;
+    margin: 0 auto 24px;
+  }
+  .hero-logo-img { width: 160px; height: 160px; }
+  .ring-1 { width: 180px; height: 180px; }
+  .ring-2 { width: 200px; height: 200px; }
+  .ring-3 { width: 220px; height: 220px; }
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 20px;
+  }
   .hero-actions { justify-content: center; }
   .hero-desc { margin-left: auto; margin-right: auto; }
 
+  /* Server layout */
   .server-layout { grid-template-columns: 1fr; }
   .server-card { position: static; }
   .server-features { grid-template-columns: 1fr 1fr; }
+
+  /* Discord */
   .discord-section { grid-template-columns: 1fr; }
-  .discord-widget-wrap { max-width: 400px; margin: 0 auto; }
+  .discord-widget-wrap { max-width: 500px; margin: 0 auto; }
+
+  /* Addons */
+  .addons-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Stores */
+  .stores-grid { grid-template-columns: 1fr 1fr; }
 }
 
+/* Móvil y zoom 200% en pantallas pequeñas */
 @media (max-width: 680px) {
   .hero-stats { flex-wrap: wrap; justify-content: center; }
   .hero-stat-divider { display: none; }
@@ -1102,6 +1172,11 @@
   .stores-grid { grid-template-columns: 1fr; }
   .hero-actions { flex-direction: column; }
   .hero-actions .btn { justify-content: center; }
+  .hero-logo-float { width: 180px; height: 180px; }
+  .hero-logo-img { width: 130px; height: 130px; }
+  .ring-1 { width: 150px; height: 150px; }
+  .ring-2 { width: 165px; height: 165px; }
+  .ring-3 { width: 180px; height: 180px; }
 }
 
 /* -- DOWNLOAD MINECRAFT ------------------------ */

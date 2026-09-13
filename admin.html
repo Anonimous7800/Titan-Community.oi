@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración – Titan Community</title>
+  <meta name="description" content="Panel de control administrativo de Titan Community: gestión de jugadores, puntos, pedidos y anuncios." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/index.css?v=4" />
+</head>
+<body>
+
+<div class="bg-animated"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- ══════ NAVBAR ══════ -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.png" alt="Titan Community Logo" />
+        <span class="nav-logo-text">Titan Community</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">🏠 Inicio</a></li>
+        <li><a href="servidor.html">⚔️ Servidor</a></li>
+        <li><a href="descargas.html">📥 Descargar</a></li>
+        <li><a href="addons.html">🔮 Addons</a></li>
+        <li><a href="discord.html">💬 Discord</a></li>
+        <li><a href="tienda.html">🛒 Tienda</a></li>
+        <li><a href="canje.html">⭐ Puntos</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="tienda.html" class="btn btn-primary btn-sm">🛒 Tienda</a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top: 100px;"></div>
+
+<!-- ══════ PUERTA DE ACCESO ADMIN (SI NO ESTÁ AUTORIZADO) ══════ -->
+<div id="adminGate" style="display:none; padding: 60px 0 120px;">
+  <div class="container">
+    <div class="card reveal" style="max-width:480px; margin:0 auto; padding:36px; text-align:center; border:1px solid var(--border-glow); box-shadow:0 0 50px rgba(123,47,255,0.25);">
+      <div style="font-size:3.5rem; margin-bottom:16px;">🔐</div>
+      <h2 class="font-cinzel" style="color:var(--gold); font-size:1.6rem; margin-bottom:8px;">Acceso Administrativo</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; margin-bottom:24px;">
+        Esta sección está reservada exclusivamente para el personal y administradores de Titan Community.
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <button class="btn btn-primary w-full" onclick="openAuthModal('login')" style="justify-content:center; font-weight:700;">
+          👤 Iniciar Sesión con Cuenta Admin
+        </button>
+
+        <div style="display:flex; align-items:center; gap:10px; margin:8px 0; color:var(--text-muted); font-size:0.75rem;">
+          <span style="flex:1; height:1px; background:var(--border-subtle);"></span>
+          <span>o introduce la clave maestra</span>
+          <span style="flex:1; height:1px; background:var(--border-subtle);"></span>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <input type="password" id="adminMasterKeyInput" placeholder="Clave maestra (ej: titan2026)" style="flex:1; padding:11px 14px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:white; outline:none;" />
+          <button class="btn btn-secondary" onclick="unlockWithMasterKey()">Desbloquear</button>
+        </div>
+      </div>
+
+      <div style="font-size:0.75rem; color:var(--text-muted);">
+        Cuenta admin predeterminada: <strong style="color:var(--gold);">Admin</strong> / Contraseña: <strong style="color:var(--gold);">admin123</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ DASHBOARD DE ADMINISTRACIÓN ══════ -->
+<div id="adminDashboard" style="display:none; padding: 20px 0 100px;">
+  <div class="container">
+
+    <!-- Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:32px;">
+      <div>
+        <div class="section-label" style="margin-bottom:6px;">⚡ Control Total</div>
+        <h1 class="section-title" style="font-size:2rem; margin:0;">Panel de <span class="highlight">Administración</span></h1>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="massPointsGift()">
+          🎁 Regalar Puntos a Todos
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="massPointsDeduct()" style="border-color:rgba(255,107,107,0.4); color:#ff8585;">
+          🔻 Quitar Puntos a Todos
+        </button>
+        <a href="index.html" class="btn btn-primary btn-sm">
+          👁️ Ver Sitio Web
+        </a>
+      </div>
+    </div>
+
+    <!-- ══════ MÉTRICAS ══════ -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:32px;">
+      <div class="card" style="padding:22px; border-left:4px solid var(--purple-main);">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Jugadores Registrados</div>
+        <div id="metricUsers" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:var(--text-primary);">0</div>
+      </div>
+
+      <div class="card" style="padding:22px; border-left:4px solid var(--gold);">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Puntos en Circulación</div>
+        <div id="metricPoints" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:var(--gold);">0 ⭐</div>
+      </div>
+
+      <div class="card" style="padding:22px; border-left:4px solid #00ff88;">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Pedidos en Tienda</div>
+        <div id="metricOrders" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:#00ff88;">0</div>
+      </div>
+
+      <div class="card" style="padding:22px; border-left:4px solid #ff6b35;">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Ingresos Tienda (USD)</div>
+        <div id="metricRevenue" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:#ff6b35;">$0.00</div>
+      </div>
+
+      <div class="card" style="padding:22px; border-left:4px solid #38ef7d;">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Productos en Tienda</div>
+        <div id="metricProducts" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:#38ef7d;">0</div>
+      </div>
+
+      <div class="card" style="padding:22px; border-left:4px solid #00d2ff;">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px;">Ítems de Canje</div>
+        <div id="metricRedeemItems" style="font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900; color:#00d2ff;">0</div>
+      </div>
+    </div>
+
+    <!-- ══════ ANUNCIO & CENTRO DE NOTIFICACIONES ══════ -->
+    <div class="card" style="padding:24px; margin-bottom:32px; background:linear-gradient(135deg, rgba(123,47,255,0.1), rgba(255,107,53,0.08)); border:1px solid rgba(123,47,255,0.4); box-shadow:0 10px 35px rgba(0,0,0,0.5);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.15rem; color:var(--gold); margin:0 0 4px;">📢 Enviar Anuncio & Notificación a la Comunidad</h3>
+          <p style="color:var(--text-muted); font-size:0.82rem; margin:0;">
+            Los anuncios se envían como <strong>Notificaciones 🔔</strong> al buzón de todos los jugadores registrados y visitantes, permitiendo que puedan abrirlos y leer los detalles.
+          </p>
+        </div>
+        <div id="announcementStatus" style="font-size:0.78rem;"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:12px; margin-top:14px; margin-bottom:12px; align-items:center;">
+        <div style="min-width:160px;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Tipo / Ícono:</label>
+          <select id="announcementIconSelect" style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:#fff; outline:none; font-size:0.85rem;">
+            <option value="📢">📢 Anuncio General</option>
+            <option value="🔥">🔥 Evento Servidor</option>
+            <option value="⚡">⚡ Mantenimiento / Update</option>
+            <option value="🎁">🎁 Recompensa / Regalo</option>
+            <option value="⚔️">⚔️ Torneo PvP</option>
+            <option value="💎">💎 Novedad Especial</option>
+            <option value="⚠️">⚠️ Aviso Importante</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Título del Anuncio:</label>
+          <input type="text" id="announcementTitleInput" placeholder="Ej: 🔥 ¡Gran Evento de PvP este Sábado!" style="width:100%; padding:10px 14px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:white; outline:none; font-size:0.88rem; font-weight:600;" />
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Mensaje Completo del Anuncio:</label>
+        <textarea id="announcementInput" rows="3" placeholder="Escribe el anuncio detallado aquí. Los jugadores podrán abrir la notificación desde la campana 🔔 en cualquier página para leerlo todo..." style="width:100%; padding:12px 14px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:white; outline:none; font-size:0.88rem; line-height:1.5; resize:vertical;"></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:#fff; cursor:pointer;">
+            <input type="checkbox" id="announcementSendNotif" checked style="accent-color:var(--gold);" />
+            <span>🔔 Enviar como Notificación al buzón</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:#fff; cursor:pointer;">
+            <input type="checkbox" id="announcementShowBanner" checked style="accent-color:var(--gold);" />
+            <span>📌 Mostrar en barra destacada superior</span>
+          </label>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-primary" onclick="publishAnnouncement()" style="padding:10px 18px; font-weight:700;">
+            🚀 Enviar Notificación & Anuncio
+          </button>
+          <button class="btn btn-secondary" onclick="clearAnnouncement()" style="padding:10px 14px;">
+            🗑️ Quitar Barra
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ CONFIGURACIÓN DEL SERVIDOR & CONTROL DE APERTURA ══════ -->
+    <div class="card" style="padding:24px; margin-bottom:32px; background:linear-gradient(135deg, rgba(255,159,28,0.06), rgba(123,47,255,0.06)); border:1px solid rgba(255,159,28,0.35); box-shadow:0 8px 30px rgba(0,0,0,0.4);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; color:#ffb703; margin:0 0 4px;">⚙️ Configuración del Servidor & Control de Apertura</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Modifica la IP y puerto, u oculta la IP si el servidor no está abierto aún y activa el aviso en proceso.</p>
+        </div>
+        <div id="serverCurrentStatusBadge"></div>
+      </div>
+
+      <form id="serverConfigForm" onsubmit="handleSaveServerConfig(event)">
+        <!-- ESTADO DEL SERVIDOR & OCULTAR IP -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:18px;">
+          <div style="background:rgba(13,13,26,0.7); border:1px solid var(--border-subtle); border-radius:10px; padding:16px;">
+            <label style="display:block; font-size:0.8rem; color:var(--gold); font-weight:700; margin-bottom:8px;">
+              🚦 Estado del Servidor
+            </label>
+            <select id="cfgServerStatus" onchange="handleServerStatusChange(this.value)" style="width:100%; padding:10px 12px; background:rgba(8,8,15,0.95); border:1px solid var(--border-glow); border-radius:8px; color:#fff; font-size:0.9rem; font-weight:600;">
+              <option value="online">🟢 Servidor Abierto / En Línea</option>
+              <option value="in_progress">🟡 En Proceso de Apertura / Próximamente</option>
+              <option value="maintenance">🔧 En Mantenimiento Técnico</option>
+              <option value="closed">🔴 Cerrado Temporalmente</option>
+            </select>
+          </div>
+
+          <div style="background:rgba(13,13,26,0.7); border:1px solid var(--border-subtle); border-radius:10px; padding:16px;">
+            <label style="display:block; font-size:0.8rem; color:#ffb703; font-weight:700; margin-bottom:8px;">
+              🔒 Visibilidad de la IP a los Jugadores
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:0.85rem; color:#fff;">
+              <input type="checkbox" id="cfgHideIp" style="width:18px; height:18px; accent-color:#ff9f1c; cursor:pointer;" />
+              <span><strong>Ocultar / Quitar la IP</strong> (El servidor no está abierto aún)</span>
+            </label>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin:6px 0 0 28px;">
+              Al activar esto, la IP y el puerto se ocultan en la web y saldrá el aviso de que el servidor está en proceso.
+            </p>
+          </div>
+        </div>
+
+        <!-- IP, PUERTO Y VERSIÓN -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; font-weight:600;">Dirección IP / Host *</label>
+            <input type="text" id="cfgServerIp" required placeholder="Ej: play.titancommunity.net" style="width:100%; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; font-family:monospace;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; font-weight:600;">Puerto Bedrock *</label>
+            <input type="text" id="cfgServerPort" required placeholder="Ej: 19132" style="width:100%; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; font-family:monospace;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; font-weight:600;">Versión Compatible</label>
+            <input type="text" id="cfgServerVersion" placeholder="Ej: Bedrock 1.21.x" style="width:100%; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem;" />
+          </div>
+        </div>
+
+        <!-- ANUNCIO DE "EN PROCESO" -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">
+              📢 Mensaje de Anuncio cuando está En Proceso o la IP está Oculta
+            </label>
+            <label style="font-size:0.75rem; color:var(--gold); display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="cfgShowTopBar" style="accent-color:var(--gold);" />
+              <span>Mostrar aviso destacado en la barra superior del sitio</span>
+            </label>
+          </div>
+          <textarea id="cfgProcessNotice" rows="3" placeholder="Mensaje explicativo para los jugadores mientras el servidor no está abierto..." style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="resetServerConfigToDefault()">
+            🔄 Restablecer Valores por Defecto
+          </button>
+          <button type="submit" class="btn btn-primary" id="btnSaveServerConfig">
+            💾 Guardar Cambios del Servidor
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ══════ GESTIÓN DE JUGADORES ══════ -->
+    <div class="card" style="padding:24px; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; margin:0 0 4px;">👥 Gestión de Jugadores y Cuentas</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Asigna puntos, modifica rangos o administra privilegios.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <input type="text" placeholder="🔍 Buscar por Nick..." oninput="filterUsers(this.value)" style="padding:8px 14px; background:rgba(13,13,26,0.8); border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:white; font-size:0.85rem; outline:none; width:220px;" />
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">Jugador</th>
+              <th style="padding:10px 14px;">Saldo Puntos</th>
+              <th style="padding:10px 14px;">Rol</th>
+              <th style="padding:10px 14px;">Método Auth</th>
+              <th style="padding:10px 14px;">Fecha Registro</th>
+              <th style="padding:10px 14px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ GESTIÓN DE PRODUCTOS DE LA TIENDA ══════ -->
+    <div class="card" style="padding:24px; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; margin:0 0 4px;">🛍️ Catálogo y Gestión de Productos de la Tienda</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Sube nuevos productos con foto, edita precios o elimina artículos en tiempo real.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="openStoreProductModal()">
+            ➕ Subir Nuevo Producto
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="clearAllStoreProducts()" style="font-size:0.75rem; color:#ff8585; border-color:rgba(255,107,107,0.3);">
+            🗑️ Vaciar Tienda
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtro de Categorías Tienda -->
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="btn btn-sm btn-secondary active" id="adminCatFilter-all" onclick="filterAdminProducts('all')">Todos</button>
+        <button class="btn btn-sm btn-secondary" id="adminCatFilter-kits" onclick="filterAdminProducts('kits')">⚔️ Kits</button>
+        <button class="btn btn-sm btn-secondary" id="adminCatFilter-rangos" onclick="filterAdminProducts('rangos')">👑 Rangos</button>
+        <button class="btn btn-sm btn-secondary" id="adminCatFilter-mascotas" onclick="filterAdminProducts('mascotas')">🐾 Mascotas</button>
+        <button class="btn btn-sm btn-secondary" id="adminCatFilter-especiales" onclick="filterAdminProducts('especiales')">✨ Especiales</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">Foto / Ítem</th>
+              <th style="padding:10px 14px;">Categoría</th>
+              <th style="padding:10px 14px;">Precio USD</th>
+              <th style="padding:10px 14px;">Descripción</th>
+              <th style="padding:10px 14px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="storeProductsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ GESTIÓN DEL CATÁLOGO DE CANJE (PUNTOS) ══════ -->
+    <div class="card" style="padding:24px; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; margin:0 0 4px;">🎁 Catálogo y Gestión de Canje (Puntos)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Administra las recompensas que los jugadores pueden canjear con sus puntos.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="openRedeemProductModal()">
+            ➕ Subir Ítem de Canje
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="clearAllRedeemProducts()" style="font-size:0.75rem; color:#ff8585; border-color:rgba(255,107,107,0.3);">
+            🗑️ Vaciar Canje
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtro de Categorías Canje -->
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="btn btn-sm btn-secondary active" id="adminRedeemCatFilter-all" onclick="filterAdminRedeemProducts('all')">Todos</button>
+        <button class="btn btn-sm btn-secondary" id="adminRedeemCatFilter-mascotas" onclick="filterAdminRedeemProducts('mascotas')">🐾 Mascotas</button>
+        <button class="btn btn-sm btn-secondary" id="adminRedeemCatFilter-efectos" onclick="filterAdminRedeemProducts('efectos')">✨ Efectos</button>
+        <button class="btn btn-sm btn-secondary" id="adminRedeemCatFilter-titulos" onclick="filterAdminRedeemProducts('titulos')">📜 Títulos</button>
+        <button class="btn btn-sm btn-secondary" id="adminRedeemCatFilter-kits" onclick="filterAdminRedeemProducts('kits')">⚔️ Kits</button>
+        <button class="btn btn-sm btn-secondary" id="adminRedeemCatFilter-especial" onclick="filterAdminRedeemProducts('especial')">🔥 Especial</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">Foto / Recompensa</th>
+              <th style="padding:10px 14px;">Categoría</th>
+              <th style="padding:10px 14px;">Precio (Puntos ⭐)</th>
+              <th style="padding:10px 14px;">Descripción</th>
+              <th style="padding:10px 14px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="redeemProductsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ GESTIÓN DE PEDIDOS DE LA TIENDA ══════ -->
+    <div class="card" style="padding:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; margin:0 0 4px;">🛒 Pedidos de la Tienda Premium</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Revisa compras realizadas por PayPal y marca su entrega en el servidor.</p>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">N° Orden</th>
+              <th style="padding:10px 14px;">Fecha</th>
+              <th style="padding:10px 14px;">Jugador</th>
+              <th style="padding:10px 14px;">Artículos</th>
+              <th style="padding:10px 14px;">Monto Total</th>
+              <th style="padding:10px 14px;">Estado</th>
+              <th style="padding:10px 14px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ GESTIÓN DE CANJES DE PUNTOS REALIZADOS ══════ -->
+    <div class="card" style="padding:24px; margin-top:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h3 class="font-cinzel" style="font-size:1.2rem; margin:0 0 4px;">🎁 Registro de Canjes Realizados (Puntos)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Revisa los artículos que los jugadores han canjeado con sus puntos ganados.</p>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">N° Canje</th>
+              <th style="padding:10px 14px;">Fecha</th>
+              <th style="padding:10px 14px; color:#00ff88; font-weight:800;">🎮 Nick Minecraft (Receptor)</th>
+              <th style="padding:10px 14px;">Recompensa Canjeada</th>
+              <th style="padding:10px 14px;">Puntos Gastados</th>
+              <th style="padding:10px 14px;">Estado</th>
+              <th style="padding:10px 14px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="redeemOrdersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ MODAL CREAR / EDITAR PRODUCTO TIENDA ══════ -->
+<div class="modal-overlay" id="storeProductModal" style="display:none; align-items:center; justify-content:center; z-index:3500;">
+  <div class="modal card" style="max-width:540px; width:92%; padding:28px; max-height:90vh; overflow-y:auto; border:1px solid var(--border-glow); box-shadow:0 0 40px rgba(123,47,255,0.3); position:relative;">
+    <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 class="font-cinzel" id="storeProductModalTitle" style="font-size:1.2rem; color:var(--gold); margin:0;">➕ Subir Nuevo Producto a la Tienda</h3>
+      <button class="modal-close" onclick="closeStoreProductModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+    </div>
+
+    <form id="storeProductForm" onsubmit="handleSaveStoreProduct(event)">
+      <input type="hidden" id="prodEditId" value="" />
+      <input type="hidden" id="prodImageBase64" value="" />
+
+      <!-- 1. FOTO DEL PRODUCTO -->
+      <div style="margin-bottom:16px; background:rgba(255,255,255,0.03); border:1px dashed var(--gold); border-radius:10px; padding:16px; text-align:center;">
+        <label style="display:block; font-size:0.85rem; color:var(--gold); font-weight:800; margin-bottom:8px;">
+          📷 1. Foto del Producto *
+        </label>
+        <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+          <input type="file" id="prodImageFile" accept="image/*" onchange="handleImageFilePicker(this, 'prodImagePreview', 'prodImageBase64', 'prodImagePlaceholder')" style="display:none;" />
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('prodImageFile').click()" style="padding:8px 16px;">
+            📁 Seleccionar Foto desde mi PC
+          </button>
+        </div>
+        <input type="text" id="prodImageUrl" placeholder="O escribe o pega el enlace web de la foto..." oninput="handleImageUrlInput(this.value, 'prodImagePreview', 'prodImageBase64', 'prodImagePlaceholder')" style="width:100%; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem; margin-bottom:10px;" />
+        
+        <!-- Preview de Foto -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <img id="prodImagePreview" src="" alt="Vista previa" style="display:none; max-width:200px; max-height:140px; object-fit:cover; border-radius:8px; border:2px solid var(--gold); box-shadow:0 4px 15px rgba(0,0,0,0.5);" />
+          <span id="prodImagePlaceholder" style="font-size:0.75rem; color:var(--text-muted);">Sin foto seleccionada aún (selecciona un archivo o pega un enlace)</span>
+        </div>
+      </div>
+
+      <!-- 2. CATEGORÍA Y PRECIO -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:0.8rem; color:#fff; margin-bottom:4px; font-weight:700;">🏷️ 2. Categoría *</label>
+          <select id="prodCat" required style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; font-weight:600;">
+            <option value="kits">⚔️ Kits</option>
+            <option value="rangos">👑 Rangos</option>
+            <option value="mascotas">🐾 Mascotas</option>
+            <option value="especiales">✨ Especiales</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; color:#00ff88; margin-bottom:4px; font-weight:700;">💵 3. Precio USD ($) *</label>
+          <input type="number" step="0.01" min="0.01" id="prodPrice" required placeholder="Ej: 4.99" style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#00ff88; font-size:0.95rem; font-weight:700;" />
+        </div>
+      </div>
+
+      <!-- 3. DESCRIPCIÓN -->
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.8rem; color:#fff; margin-bottom:4px; font-weight:700;">📝 4. Descripción del Producto *</label>
+        <textarea id="prodDesc" required rows="3" placeholder="Describe qué incluye el producto, sus ventajas y beneficios..." style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+      </div>
+
+      <!-- 4. DETALLES ADICIONALES (NOMBRE / ETIQUETA / PRECIO TACHADO) -->
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px; margin-bottom:18px;">
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">⚙️ Opciones adicionales (opcionales)</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:8px;">
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Nombre o Título (opcional)</label>
+            <input type="text" id="prodName" placeholder="Ej: Kit Dragón Supremo (o déjalo en blanco)" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Precio Original tachado (opcional)</label>
+            <input type="number" step="0.01" min="0" id="prodOrigPrice" placeholder="Ej: 7.99" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Icono (Emoji)</label>
+            <input type="text" id="prodIcon" placeholder="Ej: ⚔️, 👑, 🐉, 🔱" maxlength="8" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Etiqueta (Badge)</label>
+            <select id="prodBadge" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;">
+              <option value="">(Ninguna)</option>
+              <option value="HOT">🔥 HOT</option>
+              <option value="POPULAR">⭐ POPULAR</option>
+              <option value="NUEVO">✨ NUEVO</option>
+              <option value="EXCLUSIVO">👑 EXCLUSIVO</option>
+              <option value="MEJOR VALOR">💎 MEJOR VALOR</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn btn-secondary" onclick="closeStoreProductModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btnSaveStoreProduct">💾 Guardar Producto en Tienda</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════ MODAL CREAR / EDITAR ÍTEM DE CANJE ══════ -->
+<div class="modal-overlay" id="redeemProductModal" style="display:none; align-items:center; justify-content:center; z-index:3500;">
+  <div class="modal card" style="max-width:540px; width:92%; padding:28px; max-height:90vh; overflow-y:auto; border:1px solid var(--border-glow); box-shadow:0 0 40px rgba(255,215,0,0.3); position:relative;">
+    <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 class="font-cinzel" id="redeemProductModalTitle" style="font-size:1.2rem; color:var(--gold); margin:0;">➕ Subir Nuevo Ítem de Canje</h3>
+      <button class="modal-close" onclick="closeRedeemProductModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+    </div>
+
+    <form id="redeemProductForm" onsubmit="handleSaveRedeemProduct(event)">
+      <input type="hidden" id="redeemEditId" value="" />
+      <input type="hidden" id="redeemImageBase64" value="" />
+
+      <!-- 1. FOTO DEL ÍTEM DE CANJE -->
+      <div style="margin-bottom:16px; background:rgba(255,255,255,0.03); border:1px dashed var(--gold); border-radius:10px; padding:16px; text-align:center;">
+        <label style="display:block; font-size:0.85rem; color:var(--gold); font-weight:800; margin-bottom:8px;">
+          📷 1. Foto del Ítem de Canje *
+        </label>
+        <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+          <input type="file" id="redeemImageFile" accept="image/*" onchange="handleImageFilePicker(this, 'redeemImagePreview', 'redeemImageBase64', 'redeemImagePlaceholder')" style="display:none;" />
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('redeemImageFile').click()" style="padding:8px 16px;">
+            📁 Seleccionar Foto desde mi PC
+          </button>
+        </div>
+        <input type="text" id="redeemImageUrl" placeholder="O escribe o pega el enlace web de la foto..." oninput="handleImageUrlInput(this.value, 'redeemImagePreview', 'redeemImageBase64', 'redeemImagePlaceholder')" style="width:100%; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem; margin-bottom:10px;" />
+        
+        <!-- Preview de Foto -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <img id="redeemImagePreview" src="" alt="Vista previa" style="display:none; max-width:200px; max-height:140px; object-fit:cover; border-radius:8px; border:2px solid var(--gold); box-shadow:0 4px 15px rgba(0,0,0,0.5);" />
+          <span id="redeemImagePlaceholder" style="font-size:0.75rem; color:var(--text-muted);">Sin foto seleccionada aún</span>
+        </div>
+      </div>
+
+      <!-- 2. CATEGORÍA Y PRECIO EN PUNTOS -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:0.8rem; color:#fff; margin-bottom:4px; font-weight:700;">🏷️ 2. Categoría de Canje *</label>
+          <select id="redeemCat" required style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; font-weight:600;">
+            <option value="mascotas">🐾 Mascotas</option>
+            <option value="efectos">✨ Efectos & Trails</option>
+            <option value="titulos">📜 Títulos</option>
+            <option value="kits">⚔️ Kits</option>
+            <option value="especial">🔥 Especial</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; color:var(--gold); margin-bottom:4px; font-weight:700;">⭐ 3. Precio en Puntos *</label>
+          <input type="number" step="1" min="1" id="redeemCost" required placeholder="Ej: 150" style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:var(--gold); font-size:0.95rem; font-weight:700;" />
+        </div>
+      </div>
+
+      <!-- 3. DESCRIPCIÓN -->
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.8rem; color:#fff; margin-bottom:4px; font-weight:700;">📝 4. Descripción de la Recompensa *</label>
+        <textarea id="redeemDesc" required rows="3" placeholder="Describe qué hace este ítem y qué beneficio tiene para el jugador..." style="width:100%; padding:10px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+      </div>
+
+      <!-- 4. DETALLES ADICIONALES (NOMBRE / ICONO) -->
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px; margin-bottom:18px;">
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">⚙️ Opciones adicionales (opcionales)</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Nombre de Recompensa (opcional)</label>
+            <input type="text" id="redeemName" placeholder="Ej: Dragón Bebé Épico (o déjalo en blanco)" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:3px;">Icono (Emoji)</label>
+            <input type="text" id="redeemIcon" placeholder="Ej: 🐾, ✨, 📜, ⚔️, 🎁" maxlength="8" style="width:100%; padding:8px 10px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-size:0.8rem;" />
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn btn-secondary" onclick="closeRedeemProductModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btnSaveRedeemProduct">💾 Guardar Ítem de Canje</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/particles.js?v=4"></script>
+<script src="js/main.js?v=4"></script>
+<script src="js/productos.js?v=4"></script>
+<script src="js/auth.js?v=4"></script>
+<script src="js/admin.js?v=4"></script>
+</body>
+</html>

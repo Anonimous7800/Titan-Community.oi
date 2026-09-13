@@ -34,7 +34,7 @@
       <div class="nav-cta">
         <a href="tienda.html" class="btn btn-primary btn-sm">🛒 Tienda</a>
       </div>
-      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
@@ -58,13 +58,27 @@
     <div class="player-card-wrap reveal">
 
       <!-- Main Player Card -->
-      <div class="player-card main-card card">
+      <div class="player-card main-card card" style="position:relative;">
         <div class="player-avatar" id="playerAvatar">🧑</div>
         <div class="player-name-display" id="playerNameDisplay">Jugador</div>
         <div class="player-rank-tag" id="playerRankDisplay">Sin Rango</div>
-        <div class="player-nick-input">
-          <input type="text" id="nicknameInput" placeholder="Ingresa tu nick de Minecraft..." />
-          <button class="btn btn-primary btn-sm" onclick="loadPlayer()">Cargar</button>
+        
+        <div style="width:100%; margin-top:14px; background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.22); border-radius:10px; padding:12px 14px; text-align:left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="font-size:0.75rem; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.5px;">
+              🎮 Nick de Minecraft Bedrock:
+            </label>
+            <span id="mcNickSavedTag" style="font-size:0.7rem; color:#00ff88; font-weight:700;"></span>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="minecraftNickInput" placeholder="Ej: SteveTitan99" style="flex:1; padding:9px 12px; background:rgba(13,13,26,0.9); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; font-weight:700; font-size:0.9rem; outline:none;" />
+            <button class="btn btn-primary btn-sm" onclick="saveMinecraftNick()" style="white-space:nowrap; padding:9px 14px; font-weight:700;">
+              💾 Guardar Nick
+            </button>
+          </div>
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-top:6px;">
+            💡 Puedes cambiar tu Nick de Minecraft en cualquier momento. Aquí recibirás tus ítems y rangos canjeados en el servidor.
+          </div>
         </div>
       </div>
 
@@ -179,18 +193,51 @@
       </div>
     </div>
 
+    <!-- ══════ ACCIONES INTERACTIVAS PARA GANAR PUNTOS ══════ -->
+    <div class="earn-action-box card reveal" style="margin-bottom: 36px; background: linear-gradient(135deg, rgba(255,215,0,0.06), rgba(123,47,255,0.06)); border: 1px solid rgba(255,215,0,0.25); border-radius: var(--radius-lg); padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge" style="background: var(--gold); color: #1a0a00; font-weight: 800; font-size: 0.72rem; text-transform: uppercase;">⚡ ZONA INTERACTIVA</span>
+          <h3 style="font-family: 'Cinzel', serif; font-size: 1.3rem; margin: 8px 0 4px; color: var(--text-primary);">¡Gana Puntos Ahora Mismo!</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; max-width: 500px;">
+            Mira videos patrocinados para ganar puntos gratis, reclama tu bono de login diario o prueba los canjes al instante.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" onclick="watchVideo()" title="Ver video patrocinado">
+            🎥 Ver Video (+1 ⭐)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="simulateDailyPoints()" title="Reclamar bono diario">
+            🎁 Reclamar Bono (+5 ⭐)
+          </button>
+          <button class="btn btn-sm" onclick="addTestPoints(50)" style="background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.4);" title="Puntos de prueba">
+            🧪 Modo Demo (+50 ⭐)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ══════ REDEEM STORE ══════ -->
     <div class="reveal">
       <div style="margin-bottom:24px;">
-        <div class="section-label" style="margin-bottom:8px;">🎁 Tienda de Canje</div>
+        <div class="section-label" style="margin-bottom:8px;">🎁 Tienda de Canje Gratuita</div>
         <h2 class="section-title" style="font-size:1.6rem; margin-bottom:16px;">Canjea tus <span class="highlight">Puntos</span></h2>
+        <p class="section-sub" style="margin: 0; font-size: 0.9rem;">Elige tu recompensa y recíbela directamente en tu cuenta del servidor.</p>
       </div>
 
       <!-- Redeem Tabs -->
-      <div style="padding: 40px 20px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(255,215,0,0.3); margin: 20px auto; max-width: 600px;">
-        <div style="font-size: 4rem; margin-bottom: 16px;">🚧</div>
-        <h3 style="color: var(--gold); font-family: var(--font-cinzel); font-size: 1.8rem; margin-bottom: 12px;">PRÓXIMAMENTE</h3>
-        <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6;">La tienda de canje gratuita está en construcción. Pronto podrás usar tus puntos para obtener recompensas épicas.</p>
+      <div class="redeem-tabs">
+        <button class="redeem-tab active" onclick="switchRedeemTab('todo', this)">⭐ Todos (20)</button>
+        <button class="redeem-tab" onclick="switchRedeemTab('mascotas', this)">🐾 Mascotas (4)</button>
+        <button class="redeem-tab" onclick="switchRedeemTab('efectos', this)">✨ Efectos & Trails (5)</button>
+        <button class="redeem-tab" onclick="switchRedeemTab('titulos', this)">📜 Títulos (4)</button>
+        <button class="redeem-tab" onclick="switchRedeemTab('kits', this)">⚔️ Kits (4)</button>
+        <button class="redeem-tab" onclick="switchRedeemTab('especial', this)">🎁 Especiales (4)</button>
+      </div>
+
+      <!-- Dynamic Redeem Grid -->
+      <div class="redeem-grid" id="redeemGrid">
+        <!-- Renderizado dinámicamente desde canje.js -->
       </div>
     </div>
 
@@ -290,9 +337,17 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">🎮 Tu nick en el servidor</label>
-      <input class="form-input" id="redeemNick" type="text" placeholder="Nombre exacto de Minecraft" />
+    <div class="form-group" style="margin-bottom:18px; text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <label class="form-label" style="margin:0; font-weight:700; color:var(--gold); font-size:0.85rem;">
+          🎮 Tu Nick Exacto de Minecraft Bedrock (Receptor) *
+        </label>
+        <span style="font-size:0.72rem; color:#00ff88; font-weight:700;">✏️ Puedes cambiarlo aquí</span>
+      </div>
+      <input class="form-input" id="redeemNick" type="text" required placeholder="Ej: SteveTitan99" style="width:100%; padding:11px 14px; background:rgba(13,13,26,0.9); border:1px solid var(--gold); border-radius:var(--radius-md); color:#fff; font-weight:700; font-size:0.95rem; outline:none;" />
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">
+        ⚠️ Puedes modificar o corregir este nick en cualquier momento. El Administrador lo utilizará para entregarte la recompensa dentro del servidor.
+      </div>
     </div>
 
     <button class="buy-btn gold-btn" style="font-size:0.95rem; padding:13px; margin-top:8px;" onclick="confirmRedeem()">
@@ -342,11 +397,12 @@
   </div>
 </footer>
 
-<script src="js/particles.js"></script>
-<script src="js/main.js"></script>
-<script src="js/productos.js"></script>
-<script src="js/canje.js"></script>
-<script src="js/ai-decorator.js"></script>
+<script src="js/particles.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
+<script src="js/auth.js?v=3"></script>
+<script src="js/productos.js?v=3"></script>
+<script src="js/canje.js?v=3"></script>
+<script src="js/ai-decorator.js?v=3"></script>
 </body>
 </html>
 

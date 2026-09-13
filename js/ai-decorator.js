@@ -83,52 +83,68 @@ const AI_DECORATOR = {
     setTimeout(() => el.remove(), 4200);
   },
 
+  _getHost() {
+    let host = document.getElementById('ai-decor-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'ai-decor-host';
+      host.style.cssText = 'position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9800;contain:strict;';
+      document.body.appendChild(host);
+    }
+    return host;
+  },
+
   /* ════════════════════════════════════════
      DECORACIONES
      ════════════════════════════════════════ */
 
   /* ── 1. Estrellas fugaces ─────────────── */
   shootingStars() {
-    const count = 5 + Math.floor(Math.random() * 5);
+    const host = this._getHost();
+    const count = 4 + Math.floor(Math.random() * 4);
     for (let i = 0; i < count; i++) {
       setTimeout(() => {
         const star = document.createElement('div');
-        const startY = Math.random() * 60;
+        const startY = Math.random() * 50;
+        const length = 70 + Math.random() * 80;
         star.style.cssText = `
-          position:fixed; top:${startY}vh; left:-6px; z-index:9800;
-          width:${60 + Math.random() * 80}px; height:2px;
-          background:linear-gradient(90deg, transparent, #c77dff, white, transparent);
+          position:absolute; top:${startY}vh; left:-120px;
+          width:${length}px; height:2.5px;
+          background:linear-gradient(90deg, transparent, #c77dff 35%, #ffffff 85%, transparent);
+          box-shadow: 0 0 10px rgba(199,125,255,0.8), 0 0 4px #fff;
           border-radius:999px;
-          animation:shootingStar ${0.6 + Math.random() * 0.5}s ease-out forwards;
+          transform: rotate(20deg);
+          animation:shootingStar ${0.7 + Math.random() * 0.4}s cubic-bezier(0.25, 1, 0.5, 1) forwards;
           pointer-events:none;
         `;
-        document.body.appendChild(star);
+        host.appendChild(star);
         setTimeout(() => star.remove(), 1200);
-      }, i * 200);
+      }, i * 180);
     }
   },
 
   /* ── 2. Bloques Minecraft flotantes ───── */
   floatingBlocks() {
+    const host = this._getHost();
     const icons = ['⬜','🟫','🟩','🟦','🟧','⬛','🟨'];
-    const count = 8 + Math.floor(Math.random() * 6);
+    const count = 7 + Math.floor(Math.random() * 5);
     for (let i = 0; i < count; i++) {
       setTimeout(() => {
         const block = document.createElement('div');
         const icon  = icons[Math.floor(Math.random() * icons.length)];
-        const size  = 20 + Math.random() * 24;
+        const size  = 18 + Math.random() * 22;
         block.style.cssText = `
-          position:fixed;
+          position:absolute;
           left:${Math.random() * 100}vw;
-          bottom:-60px; z-index:9800;
+          bottom:-60px;
           font-size:${size}px;
-          animation:floatUp ${3 + Math.random() * 3}s ease-out forwards;
+          animation:floatUp ${3.5 + Math.random() * 2.5}s ease-out forwards;
           pointer-events:none;
           filter:drop-shadow(0 0 6px rgba(123,47,255,0.6));
           opacity:0.85;
         `;
         block.textContent = icon;
-        document.body.appendChild(block);
+        host.appendChild(block);
         setTimeout(() => block.remove(), 6500);
       }, i * 120);
     }
@@ -166,27 +182,28 @@ const AI_DECORATOR = {
 
   /* ── 5. Lluvia de píxeles ─────────────── */
   pixelRain() {
+    const host = this._getHost();
     const colors = ['#7b2fff','#c77dff','#00ff88','#ffd700','#ff6b35'];
-    const count  = 30 + Math.floor(Math.random() * 20);
+    const count  = 25 + Math.floor(Math.random() * 15);
     for (let i = 0; i < count; i++) {
       setTimeout(() => {
         const px    = document.createElement('div');
-        const size  = 4 + Math.random() * 6;
+        const size  = 3 + Math.random() * 5;
         const color = colors[Math.floor(Math.random() * colors.length)];
         px.style.cssText = `
-          position:fixed;
+          position:absolute;
           left:${Math.random() * 100}vw;
-          top:-${size}px; z-index:9800;
+          top:-${size}px;
           width:${size}px; height:${size}px;
           background:${color};
           border-radius:${Math.random() > 0.5 ? '50%' : '1px'};
-          animation:pixelFall ${1.5 + Math.random() * 2}s linear forwards;
+          animation:pixelFall ${1.8 + Math.random() * 2}s linear forwards;
           pointer-events:none;
-          opacity:0.8;
+          opacity:0.85;
         `;
-        document.body.appendChild(px);
-        setTimeout(() => px.remove(), 4000);
-      }, i * 60);
+        host.appendChild(px);
+        setTimeout(() => px.remove(), 4200);
+      }, i * 65);
     }
   },
 
@@ -205,6 +222,7 @@ const AI_DECORATOR = {
 
   /* ── 7. Destellos en esquinas ────────── */
   cornerSparkle() {
+    const host = this._getHost();
     const corners = [
       { top: '12px', left: '12px' },
       { top: '12px', right: '12px' },
@@ -216,12 +234,12 @@ const AI_DECORATOR = {
         const sparkle = document.createElement('div');
         const posCSS  = Object.entries(pos).map(([k,v]) => `${k}:${v}`).join(';');
         sparkle.style.cssText = `
-          position:fixed; ${posCSS}; z-index:9900; pointer-events:none;
+          position:absolute; ${posCSS}; pointer-events:none;
           width:40px; height:40px;
           animation:cornerSparkleAnim 1.2s ease-in-out forwards;
         `;
         sparkle.innerHTML = '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="20,2 23,16 37,20 23,24 20,38 17,24 3,20 17,16" fill="#ffd700" opacity="0.9"/></svg>';
-        document.body.appendChild(sparkle);
+        host.appendChild(sparkle);
         setTimeout(() => sparkle.remove(), 1400);
       }, idx * 150);
     });
@@ -235,13 +253,15 @@ const AI_DECORATOR = {
   const style = document.createElement('style');
   style.textContent = `
     @keyframes shootingStar {
-      0%   { transform: translateX(0) translateY(0); opacity:1; }
-      100% { transform: translateX(110vw) translateY(20px); opacity:0; }
+      0%   { transform: translate3d(0, 0, 0) rotate(20deg); opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 0.9; }
+      100% { transform: translate3d(calc(100vw + 200px), 250px, 0) rotate(20deg); opacity: 0; }
     }
     @keyframes floatUp {
       0%   { transform: translateY(0) rotate(0deg); opacity:0.85; }
       80%  { opacity:0.7; }
-      100% { transform: translateY(-110vh) rotate(${Math.random() > 0.5 ? '360' : '-360'}deg); opacity:0; }
+      100% { transform: translateY(-110vh) rotate(180deg); opacity:0; }
     }
     @keyframes pulseGlow {
       0%   { opacity:0; }

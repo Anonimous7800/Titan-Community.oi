@@ -85,22 +85,22 @@
     <!-- Hero Stats -->
     <div class="hero-stats reveal reveal-delay-4">
       <div class="hero-stat">
-        <span class="hero-stat-num" data-count="0">0</span>
+        <span class="hero-stat-num" data-count="2450">0</span>
         <span class="hero-stat-label">Miembros</span>
       </div>
       <div class="hero-stat-divider"></div>
       <div class="hero-stat">
-        <span class="hero-stat-num" data-count="0">0</span>
+        <span class="hero-stat-num" data-count="128">0</span>
         <span class="hero-stat-label">En línea</span>
       </div>
       <div class="hero-stat-divider"></div>
       <div class="hero-stat">
-        <span class="hero-stat-num" data-count="0">0</span>
+        <span class="hero-stat-num" data-count="35">0</span>
         <span class="hero-stat-label">Addons</span>
       </div>
       <div class="hero-stat-divider"></div>
       <div class="hero-stat">
-        <span class="hero-stat-num" data-count="0">0</span>
+        <span class="hero-stat-num" data-count="3">0</span>
         <span class="hero-stat-label">Años activos</span>
       </div>
     </div>
@@ -124,7 +124,112 @@
   </div>
 </section>
 
-<!-- Sections moved to separate HTML files -->
+<!-- ══════ CONEXIÓN RÁPIDA ══════ -->
+<section class="section" id="quick-connect" style="padding-bottom: 20px;">
+  <div class="container">
+    <div class="text-center mb-24">
+      <div class="section-label">⚡ Conexión Inmediata</div>
+      <h2 class="section-title">Entra al <span class="highlight">Servidor</span></h2>
+      <p class="section-sub" style="margin: 0 auto;">Compatible con todas las plataformas de Minecraft Bedrock Edition (Móvil, PC y Consolas).</p>
+    </div>
+
+    <div class="card reveal" style="max-width: 820px; margin: 0 auto; padding: 28px; background: linear-gradient(135deg, rgba(13,13,26,0.9), rgba(26,16,48,0.7)); border: 1px solid var(--border-glow); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <img src="assets/logo.png" alt="Titan Community" style="width: 60px; height: 60px; border-radius: 12px; box-shadow: 0 0 20px rgba(123,47,255,0.4);" />
+          <div>
+            <div id="heroServerStatusRow" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span class="status-dot"></span>
+              <span style="color: #00ff88; font-size: 0.85rem; font-weight: 700;">Servidor En Línea</span>
+              <span class="badge badge-popular" style="font-size: 0.65rem;">Bedrock 1.21.x</span>
+            </div>
+            <div style="font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">Titan Community Oficial</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="servidor.html" class="btn btn-secondary btn-sm">
+            📖 Guía & Reglas
+          </a>
+          <a id="heroConnectBtn" href="minecraft://?addExternalServer=Titan%20Community|play.titancommunity.net:19132" class="btn btn-primary btn-sm">
+            🎮 Conectar al Juego
+          </a>
+        </div>
+      </div>
+
+      <div id="heroServerConnectionBox" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+        <div class="server-ip-copy" onclick="TitanServer.copyIp(this)" title="Clic para copiar IP">
+          <div>
+            <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Dirección IP</div>
+            <div style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--purple-glow);">play.titancommunity.net</div>
+          </div>
+          <span style="font-size: 0.78rem; background: rgba(123,47,255,0.15); border: 1px solid rgba(123,47,255,0.3); padding: 4px 8px; border-radius: 6px; color: var(--purple-glow);">📋 Copiar</span>
+        </div>
+
+        <div class="server-ip-copy" onclick="TitanServer.copyPort(this)" title="Clic para copiar Puerto">
+          <div>
+            <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Puerto Bedrock</div>
+            <div style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold);">19132</div>
+          </div>
+          <span style="font-size: 0.78rem; background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.25); padding: 4px 8px; border-radius: 6px; color: var(--gold);">📋 Copiar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FEATURES HIGHLIGHTS ══════ -->
+<section class="section" id="features" style="padding-top: 40px;">
+  <div class="container">
+    <div class="text-center mb-24">
+      <div class="section-label">✨ ¿Qué nos hace únicos?</div>
+      <h2 class="section-title">Una experiencia <span class="highlight">sin igual</span></h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      <div class="card reveal" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(123,47,255,0.12); border:1px solid rgba(123,47,255,0.3); border-radius:14px; flex-shrink:0;">🔮</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">+35 Addons Exclusivos</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Nuevas mecánicas, mobs personalizados, bloques únicos y mundos generados especialmente para Titan Community.</p>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-1" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(255,107,53,0.12); border:1px solid rgba(255,107,53,0.3); border-radius:14px; flex-shrink:0;">⚔️</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">PvP &amp; Torneos Épicos</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Sistema de combate personalizado con kits, arenas, rankings en tiempo real y torneos con premios cada semana.</p>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-2" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.3); border-radius:14px; flex-shrink:0;">⭐</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">Puntos Totalmente Gratis</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Gana puntos jugando y canjéalos por cosméticos, efectos especiales y mucho más. Sin pagar nada.</p>
+        </div>
+      </div>
+      <div class="card reveal" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(0,255,136,0.10); border:1px solid rgba(0,255,136,0.25); border-radius:14px; flex-shrink:0;">🏡</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">Survival &amp; Economía</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Mundo survival con economía propia, shops de jugadores, subastas y terrenos protegidos.</p>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-1" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(88,101,242,0.12); border:1px solid rgba(88,101,242,0.3); border-radius:14px; flex-shrink:0;">📱</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">Multi-plataforma</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Compatible con móvil, PC y consolas (Xbox, PS, Switch). Juega desde donde quieras con Minecraft Bedrock.</p>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-2" style="padding: 28px; display: flex; align-items: flex-start; gap: 18px;">
+        <div style="font-size: 2.2rem; width:54px; height:54px; display:flex; align-items:center; justify-content:center; background:rgba(191,0,255,0.12); border:1px solid rgba(191,0,255,0.25); border-radius:14px; flex-shrink:0;">🎁</div>
+        <div>
+          <h3 style="font-family:'Cinzel',serif; font-size:1rem; margin-bottom:8px;">Eventos Semanales</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">Invasiones, temporadas temáticas, sorteos y recompensas exclusivas que cambian cada semana. ¡Nunca es aburrido!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ══════ CTA TIENDAS ══════ -->
 <section class="section" id="stores">
@@ -139,14 +244,14 @@
         <div style="height: 160px; width: 100%; position: relative;">
           <img src="assets/mc_banner_generic.png" alt="Tienda Premium" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" />
           <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-card), transparent);"></div>
-          <span style="position: absolute; top: 15px; right: 15px; background:linear-gradient(135deg,#ff6b35,#ff3d00); color:white; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase; box-shadow: 0 4px 15px rgba(255,61,0,0.4);">🚀 Próximamente</span>
+          <span style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, var(--purple-main), var(--purple-deep)); color: white; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(123,47,255,0.4);">💎 Activa</span>
         </div>
         <div class="store-promo-content" style="padding: 20px 32px 32px;">
           <div class="store-promo-icon" style="margin-top:-30px; position:relative; z-index:2; background:var(--bg-card); box-shadow:0 10px 20px rgba(0,0,0,0.5);">💎</div>
           <h3 style="margin: 5px 0 10px;">Tienda Premium</h3>
-          <p style="margin-bottom: 24px;">Kits épicos, rangos exclusivos, mascotas únicas y items especiales. Paga con tarjeta o PayPal cuando esté disponible.</p>
-          <a href="#" class="btn w-full" style="background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: not-allowed; text-decoration: none; justify-content: center;" onclick="return false;">
-            🚧 En Construcción
+          <p style="margin-bottom: 24px;">Kits épicos, rangos exclusivos, mascotas únicas y items especiales. Paga seguro con PayPal y recibe activación rápida.</p>
+          <a href="tienda.html" class="btn btn-primary w-full" style="text-decoration: none; justify-content: center;">
+            🛒 Ver Catálogo Premium
           </a>
         </div>
       </div>
@@ -155,14 +260,14 @@
         <div style="height: 160px; width: 100%; position: relative;">
           <img src="assets/mc_banner_1_20.png" alt="Tienda de Puntos" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" />
           <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-card), transparent);"></div>
-          <span style="position: absolute; top: 15px; right: 15px; background:linear-gradient(135deg,#ff6b35,#ff3d00); color:white; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase; box-shadow: 0 4px 15px rgba(255,61,0,0.4);">🚀 Próximamente</span>
+          <span style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #ffd700, #ff9f43); color: #1a0a00; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(255,215,0,0.4);">⭐ 100% Gratis</span>
         </div>
         <div class="store-promo-content" style="padding: 20px 32px 32px;">
           <div class="store-promo-icon" style="margin-top:-30px; position:relative; z-index:2; background:var(--bg-card); box-shadow:0 10px 20px rgba(0,0,0,0.5);">⭐</div>
           <h3 style="margin: 5px 0 10px;">Tienda de Puntos</h3>
-          <p style="margin-bottom: 24px;">Gana puntos jugando y viendo anuncios. Canjéalos por cosméticos, efectos y recompensas únicas de forma totalmente gratuita.</p>
-          <a href="#" class="btn w-full" style="background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: not-allowed; text-decoration: none; justify-content: center;" onclick="return false;">
-            🚧 En Construcción
+          <p style="margin-bottom: 24px;">Gana puntos jugando y completando actividades. Canjéalos por cosméticos, efectos, kits y títulos de forma totalmente gratuita.</p>
+          <a href="canje.html" class="btn btn-secondary w-full" style="text-decoration: none; justify-content: center;">
+            ⭐ Canjear Mis Puntos
           </a>
         </div>
       </div>
@@ -222,10 +327,11 @@
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<script src="js/particles.js?v=2"></script>
-<script src="js/minecraft.js?v=2"></script>
-<script src="js/main.js?v=2"></script>
-<script src="js/ai-decorator.js"></script>
+<script src="js/particles.js?v=3"></script>
+<script src="js/minecraft.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
+<script src="js/auth.js?v=3"></script>
+<script src="js/ai-decorator.js?v=3"></script>
 </body>
 </html>
 

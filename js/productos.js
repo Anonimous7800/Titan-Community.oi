@@ -201,35 +201,35 @@ const STORE_ITEMS = [
 
 const REDEEM_ITEMS = [
   // ══════ MASCOTAS ══════
-  { id:'r-pet-fox',   cat:'mascotas', icon:'🦊', name:'Mascota Zorro',     desc:'Un adorable zorro que te sigue con partículas de corazones.',      cost:200,  banner:'banner-fire',   badge:null },
-  { id:'r-pet-cat',   cat:'mascotas', icon:'🐱', name:'Mascota Gato',      desc:'Gato del servidor con collar brillante y maullidos especiales.',    cost:150,  banner:'banner-pink',   badge:'Cute' },
-  { id:'r-pet-owl',   cat:'mascotas', icon:'🦉', name:'Búho Sabio',        desc:'Búho que emite sabiduría y partículas de estrellas.',               cost:350,  banner:'banner-dark',   badge:'Raro' },
-  { id:'r-pet-baby-dragon', cat:'mascotas', icon:'🐲', name:'Dragón Bebé', desc:'Pequeño dragón púrpura que suelta chispas al caminar.',             cost:500,  banner:'banner-purple', badge:'Épico' },
+  { id: 'r-pet-fox', cat: 'mascotas', icon: '🦊', name: 'Mascota Zorro', desc: 'Un adorable zorro que te sigue con partículas de corazones.', cost: 200, banner: 'banner-fire', badge: null },
+  { id: 'r-pet-cat', cat: 'mascotas', icon: '🐱', name: 'Mascota Gato', desc: 'Gato del servidor con collar brillante y maullidos especiales.', cost: 150, banner: 'banner-pink', badge: 'Cute' },
+  { id: 'r-pet-owl', cat: 'mascotas', icon: '🦉', name: 'Búho Sabio', desc: 'Búho que emite sabiduría y partículas de estrellas.', cost: 350, banner: 'banner-dark', badge: 'Raro' },
+  { id: 'r-pet-baby-dragon', cat: 'mascotas', icon: '🐲', name: 'Dragón Bebé', desc: 'Pequeño dragón púrpura que suelta chispas al caminar.', cost: 500, banner: 'banner-purple', badge: 'Épico' },
 
   // ══════ EFECTOS ══════
-  { id:'r-fx-hearts', cat:'efectos', icon:'💗', name:'Trail Corazones',    desc:'Deja un rastro de corazones brillantes al moverte.',                cost:100,  banner:'banner-pink',   badge:null },
-  { id:'r-fx-fire',   cat:'efectos', icon:'🔥', name:'Trail de Fuego',     desc:'Partículas de fuego épico al caminar por el servidor.',             cost:150,  banner:'banner-fire',   badge:'Hot' },
-  { id:'r-fx-stars',  cat:'efectos', icon:'⭐', name:'Trail Estrellas',    desc:'Estrellas doradas que caen a tu paso.',                             cost:200,  banner:'banner-gold',   badge:null },
-  { id:'r-fx-aura',   cat:'efectos', icon:'✨', name:'Aura Mística',       desc:'Aura de partículas moradas que te rodean constantemente.',          cost:300,  banner:'banner-purple', badge:'Épico' },
-  { id:'r-fx-light',  cat:'efectos', icon:'🌟', name:'Efecto Relámpago',   desc:'Rayos de electricidad azul al saltar o atacar.',                    cost:400,  banner:'banner-cyan',   badge:'Raro' },
+  { id: 'r-fx-hearts', cat: 'efectos', icon: '💗', name: 'Trail Corazones', desc: 'Deja un rastro de corazones brillantes al moverte.', cost: 100, banner: 'banner-pink', badge: null },
+  { id: 'r-fx-fire', cat: 'efectos', icon: '🔥', name: 'Trail de Fuego', desc: 'Partículas de fuego épico al caminar por el servidor.', cost: 150, banner: 'banner-fire', badge: 'Hot' },
+  { id: 'r-fx-stars', cat: 'efectos', icon: '⭐', name: 'Trail Estrellas', desc: 'Estrellas doradas que caen a tu paso.', cost: 200, banner: 'banner-gold', badge: null },
+  { id: 'r-fx-aura', cat: 'efectos', icon: '✨', name: 'Aura Mística', desc: 'Aura de partículas moradas que te rodean constantemente.', cost: 300, banner: 'banner-purple', badge: 'Épico' },
+  { id: 'r-fx-light', cat: 'efectos', icon: '🌟', name: 'Efecto Relámpago', desc: 'Rayos de electricidad azul al saltar o atacar.', cost: 400, banner: 'banner-cyan', badge: 'Raro' },
 
   // ══════ TITULOS ══════
-  { id:'r-tit-novice', cat:'titulos', icon:'📜', name:'Título: Novato',     desc:'Prefijo [Novato] en el chat del servidor.',                         cost:50,   banner:'banner-dark',   badge:null },
-  { id:'r-tit-hero',   cat:'titulos', icon:'🦸', name:'Título: Héroe',      desc:'Prefijo [Héroe] con color especial en el chat.',                    cost:200,  banner:'banner-blue',   badge:null },
-  { id:'r-tit-legend', cat:'titulos', icon:'🌟', name:'Título: Leyenda',    desc:'El título más codiciado. [Leyenda] con brillo dorado.',             cost:800,  banner:'banner-gold',   badge:'Raro' },
-  { id:'r-tit-titan',  cat:'titulos', icon:'🔱', name:'Título: Titán',      desc:'[Titán] exclusivo para los más dedicados. Solo 20 disponibles.',   cost:2000, banner:'banner-purple', badge:'Épico' },
+  { id: 'r-tit-novice', cat: 'titulos', icon: '📜', name: 'Título: Novato', desc: 'Prefijo [Novato] en el chat del servidor.', cost: 50, banner: 'banner-dark', badge: null },
+  { id: 'r-tit-hero', cat: 'titulos', icon: '🦸', name: 'Título: Héroe', desc: 'Prefijo [Héroe] con color especial en el chat.', cost: 200, banner: 'banner-blue', badge: null },
+  { id: 'r-tit-legend', cat: 'titulos', icon: '🌟', name: 'Título: Leyenda', desc: 'El título más codiciado. [Leyenda] con brillo dorado.', cost: 800, banner: 'banner-gold', badge: 'Raro' },
+  { id: 'r-tit-titan', cat: 'titulos', icon: '🔱', name: 'Título: Titán', desc: '[Titán] exclusivo para los más dedicados. Solo 20 disponibles.', cost: 2000, banner: 'banner-purple', badge: 'Épico' },
 
   // ══════ KITS ══════
-  { id:'r-kit-wood',  cat:'kits', icon:'🪵', name:'Kit Madera',            desc:'Kit básico de herramientas de madera para comenzar.',               cost:50,   banner:'banner-dark',   badge:null },
-  { id:'r-kit-stone', cat:'kits', icon:'🪨', name:'Kit Piedra',            desc:'Herramientas y armadura de piedra completa.',                       cost:150,  banner:'banner-dark',   badge:null },
-  { id:'r-kit-iron',  cat:'kits', icon:'⚔️', name:'Kit Hierro',            desc:'Equipo de hierro completo con encantamientos básicos.',             cost:300,  banner:'banner-blue',   badge:null },
-  { id:'r-kit-food',  cat:'kits', icon:'🍖', name:'Kit Comida',            desc:'64 unidades de comida variada y pociones de regeneración.',         cost:80,   banner:'banner-green',  badge:null },
+  { id: 'r-kit-wood', cat: 'kits', icon: '🪵', name: 'Kit Madera', desc: 'Kit básico de herramientas de madera para comenzar.', cost: 50, banner: 'banner-dark', badge: null },
+  { id: 'r-kit-stone', cat: 'kits', icon: '🪨', name: 'Kit Piedra', desc: 'Herramientas y armadura de piedra completa.', cost: 150, banner: 'banner-dark', badge: null },
+  { id: 'r-kit-iron', cat: 'kits', icon: '⚔️', name: 'Kit Hierro', desc: 'Equipo de hierro completo con encantamientos básicos.', cost: 300, banner: 'banner-blue', badge: null },
+  { id: 'r-kit-food', cat: 'kits', icon: '🍖', name: 'Kit Comida', desc: '64 unidades de comida variada y pociones de regeneración.', cost: 80, banner: 'banner-green', badge: null },
 
   // ══════ ESPECIAL ══════
-  { id:'r-sp-chest',  cat:'especial', icon:'📦', name:'Cofre Misterioso',  desc:'Cofre con item aleatorio de rareza épica o legendaria.',            cost:600,  banner:'banner-fire',   badge:'Especial' },
-  { id:'r-sp-role',   cat:'especial', icon:'💬', name:'Rol Discord',        desc:'Rol especial en el servidor de Discord de Titan Community.',        cost:500,  banner:'banner-purple', badge:'Discord' },
-  { id:'r-sp-coins',  cat:'especial', icon:'💰', name:'500 Monedas',        desc:'$500 monedas del servidor para gastar en la economía interna.',     cost:400,  banner:'banner-gold',   badge:null },
-  { id:'r-sp-reset',  cat:'especial', icon:'🏳️', name:'Reset de Cooldowns', desc:'Restablece todos los cooldowns de kits y comandos al instante.',   cost:700,  banner:'banner-cyan',   badge:'Útil' }
+  { id: 'r-sp-chest', cat: 'especial', icon: '📦', name: 'Cofre Misterioso', desc: 'Cofre con item aleatorio de rareza épica o legendaria.', cost: 600, banner: 'banner-fire', badge: 'Especial' },
+  { id: 'r-sp-role', cat: 'especial', icon: '💬', name: 'Rol Discord', desc: 'Rol especial en el servidor de Discord de Titan Community.', cost: 500, banner: 'banner-purple', badge: 'Discord' },
+  { id: 'r-sp-coins', cat: 'especial', icon: '💰', name: '500 Monedas', desc: '$500 monedas del servidor para gastar en la economía interna.', cost: 400, banner: 'banner-gold', badge: null },
+  { id: 'r-sp-reset', cat: 'especial', icon: '🏳️', name: 'Reset de Cooldowns', desc: 'Restablece todos los cooldowns de kits y comandos al instante.', cost: 700, banner: 'banner-cyan', badge: 'Útil' }
 ];
 
 /* =============================================
@@ -269,3 +269,65 @@ const ADDON_ITEMS = [
   //   downloadUrl: 'https://cdn.discordapp.com/attachments/.../mi-addon.mcpack'
   // },
 ];
+
+/* ─ Borrado de lo que estaba subido para comenzar en blanco ── */
+try {
+  if (!localStorage.getItem('titanWipedPreviousCatalogs_v2')) {
+    localStorage.setItem('titanCustomStoreItems', JSON.stringify([]));
+    localStorage.setItem('titanCustomRedeemItems', JSON.stringify([]));
+    localStorage.setItem('titanWipedPreviousCatalogs_v2', 'true');
+  }
+} catch (e) { }
+
+/* ─ Funciones de Persistencia Dinámica para Tienda y Canje ── */
+window.getStoreItems = function () {
+  try {
+    const raw = localStorage.getItem('titanCustomStoreItems');
+    if (raw !== null) {
+      const items = JSON.parse(raw);
+      if (Array.isArray(items)) return items;
+    }
+  } catch (e) { }
+  return [];
+};
+
+window.saveStoreItems = function (items) {
+  try {
+    localStorage.setItem('titanCustomStoreItems', JSON.stringify(items));
+    window.dispatchEvent(new Event('titanStoreItemsUpdated'));
+    return true;
+  } catch (e) {
+    console.error('Error al guardar productos en localStorage:', e);
+    if (typeof showToast === 'function') {
+      showToast('⚠️ No se pudo guardar: la imagen es demasiado grande o la memoria del navegador está llena', 'error');
+    }
+    return false;
+  }
+};
+
+window.getRedeemItems = function () {
+  try {
+    const raw = localStorage.getItem('titanCustomRedeemItems');
+    if (raw !== null) {
+      const items = JSON.parse(raw);
+      if (Array.isArray(items)) return items;
+    }
+  } catch (e) { }
+  return [];
+};
+
+window.saveRedeemItems = function (items) {
+  try {
+    localStorage.setItem('titanCustomRedeemItems', JSON.stringify(items));
+    window.dispatchEvent(new Event('titanRedeemItemsUpdated'));
+    return true;
+  } catch (e) {
+    console.error('Error al guardar ítems de canje en localStorage:', e);
+    if (typeof showToast === 'function') {
+      showToast('⚠️ No se pudo guardar: la imagen es demasiado grande o la memoria del navegador está llena', 'error');
+    }
+    return false;
+  }
+};
+
+
