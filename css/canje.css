@@ -492,3 +492,27 @@ CANJE / PUNTOS PAGE - STYLES
   .redeem-tab { flex: 1 1 calc(50% - 6px); text-align: center; padding: 10px 8px; font-size: 0.8rem; }
   .points-hero { padding-top: 100px; padding-bottom: 30px; }
 }
+
+/* ── MOBILE EXTRA: tablas con scroll horizontal ── */
+@media (max-width: 640px) {
+  /* Historial de canjes: scroll horizontal */
+  .history-table-wrap,
+  .earn-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .history-table th,
+  .history-table td { padding: 10px 12px; font-size: 0.78rem; white-space: nowrap; }
+
+  .earn-table th,
+  .earn-table td { padding: 10px 14px; font-size: 0.78rem; }
+
+  /* Catálogo de canje: 1 columna */
+  .redeem-grid { grid-template-columns: 1fr !important; }
+
+  /* Player card wrap */
+  .player-card-wrap { grid-template-columns: 1fr !important; }
+  .player-card.main-card { grid-column: 1 !important; }
+}
+

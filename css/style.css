@@ -1124,3 +1124,125 @@ a.w-full        { display: flex; width: 100%; }
   .hero-desc { font-size: 0.92rem; }
   .section-title { font-size: 1.8rem; }
 }
+
+/* ══════════════════════════════════════════════
+   MOBILE FULL PHONE SUPPORT
+   Teléfonos ≤768px & ≤480px
+   ══════════════════════════════════════════════ */
+
+/* ── Nav: ocultar btn Discord en tablet/mobile ── */
+@media (max-width: 1024px) {
+  .nav-cta .btn-discord { display: none; }
+}
+
+@media (max-width: 768px) {
+  /* Prevenir scroll horizontal */
+  html, body { overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+
+  /* Nav CTA: quitar tienda en mobile (ya está en el menú) */
+  .nav-cta .btn-primary { display: none; }
+
+  /* User dropdown posicionado en mobile */
+  #userDropdownMenu {
+    right: 0 !important;
+    left: auto !important;
+    min-width: 220px !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  /* Notification dropdown en mobile */
+  #notifDropdown {
+    right: 0 !important;
+    left: auto !important;
+    width: min(360px, calc(100vw - 24px)) !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Modals adaptados a mobile */
+  .modal-overlay { padding: 8px !important; align-items: flex-end !important; }
+  .modal {
+    padding: 22px 16px !important;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+    max-height: 92vh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Notif detail modal bottom sheet */
+  .notif-detail-overlay { padding: 0 !important; align-items: flex-end !important; }
+  .notif-detail-card {
+    border-radius: 20px 20px 0 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Botones táctiles mínimo 44px */
+  .btn { min-height: 44px; }
+  .btn-sm { min-height: 38px; }
+
+  /* Footer 1 columna */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 28px; }
+  .footer-bottom { flex-direction: column !important; text-align: center; gap: 12px; }
+
+  /* Toast en mobile */
+  .toast-container { left: 12px !important; right: 12px !important; bottom: 12px !important; }
+  .toast { max-width: 100% !important; }
+
+  /* Server process notice bar wrapping */
+  .server-process-notice-bar { font-size: 0.78rem !important; padding: 8px 12px !important; }
+
+  /* Tabs list scroll horizontal */
+  .tabs-list { max-width: 100% !important; overflow-x: auto !important; }
+  .tab-btn { padding: 8px 14px !important; font-size: 0.82rem !important; }
+
+  /* Admin panel grids */
+  .admin-grid,
+  .admin-stats-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 480px) {
+  /* Contenedor más estrecho */
+  .container { padding: 0 14px !important; }
+
+  /* Nav logo text oculto en pantallas muy pequeñas */
+  .nav-logo-text { display: none; }
+  .nav-logo img { width: 36px !important; height: 36px !important; }
+
+  /* Modal sin border-radius abajo */
+  .modal { border-radius: 12px 12px 0 0 !important; max-height: 96vh !important; }
+
+  /* Grid 1 columna en cualquier página */
+  .server-features,
+  .earn-grid { grid-template-columns: 1fr !important; }
+
+  /* Tabs de tienda */
+  .tabs-list { width: 100% !important; scrollbar-width: none !important; }
+  .tabs-list::-webkit-scrollbar { display: none !important; }
+}
+
+/* ── Touch pointer: desactivar hover en táctil para rendimiento ── */
+@media (pointer: coarse) {
+  html { -webkit-overflow-scrolling: touch; }
+  * { -webkit-tap-highlight-color: transparent; }
+
+  /* Tap target mínimo para el hamburger */
+  .nav-toggle {
+    width: 44px !important;
+    height: 44px !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Feedback táctil en cards */
+  .card:active,
+  .glass-card:active,
+  .addon-card:active,
+  .product-card:active {
+    transform: scale(0.985) !important;
+    transition: transform 0.1s ease !important;
+  }
+}
+

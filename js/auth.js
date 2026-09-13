@@ -973,12 +973,24 @@
           width: 100%;
         }
         .user-dropdown, .notif-dropdown {
-          width: calc(100vw - 32px);
-          right: -10px;
+          width: calc(100vw - 24px);
+          right: 0;
+          left: auto;
+          max-height: 72vh;
+          overflow-y: auto;
         }
       }
 
-      /* ── PERFIL DE JUGADOR & APP HUB MODAL ── */
+      /* 480px: teléfonos muy pequeños */
+      @media (max-width: 480px) {
+        .user-pill-name { max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-pill-points { display: none; }
+        .notif-btn { width: 42px; height: 42px; }
+        .user-pill { padding: 6px 10px !important; gap: 6px !important; }
+        .modal-close-btn { top: 12px !important; right: 12px !important; }
+      }
+
+
       /* ── PERFIL DE JUGADOR & APP HUB MODAL ── */
       .profile-app-dialog {
         max-width: 660px;
