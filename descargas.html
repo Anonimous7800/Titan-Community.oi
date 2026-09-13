@@ -48,27 +48,19 @@
   </div>
 </nav>
 
-<div style="padding-top: 100px;"></div>
-
-<!-- ══════ DOWNLOAD HERO ══════ -->
-<section style="padding: 40px 0 0; position:relative; z-index:1;">
+<!-- ══════ DOWNLOAD HERO & MAIN CONTENT ══════ -->
+<section class="download-page-section" id="download">
   <div class="container">
-    <div class="text-center">
-      <div class="section-label">📥 Descarga Gratuita</div>
+    <div class="text-center download-hero-header">
+      <div class="section-label">📥 Descarga Oficial</div>
       <h1 class="section-title">Minecraft Bedrock <span class="highlight">Última Versión</span></h1>
-      <p class="section-sub" style="margin: 0 auto 20px; max-width:560px;">
-        La versión exacta que usa Titan Community. Descargada directamente desde GitHub, siempre segura y actualizada.
+      <p class="section-sub">
+        La versión oficial compatible con Titan Community. Instaladores limpios, rápidos y seguros extraídos directamente desde GitHub.
       </p>
     </div>
-  </div>
-</section>
-
-<!-- ══════ VERSION CARD ══════ -->
-<section class="section" id="download" style="padding-top:30px;">
-  <div class="container">
 
     <!-- Main download card -->
-    <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-glow); border-radius:20px; overflow:hidden; box-shadow: 0 0 40px rgba(123,47,255,0.15);">
+    <div class="download-main-card reveal">
 
       <!-- Style overrides and animations for AI scanner -->
       <style>
@@ -86,39 +78,39 @@
       </style>
 
       <!-- Dynamic Banner with AI overlay -->
-      <div style="width:100%; min-height:300px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; transition: all 0.5s ease;">
-        <img id="dl-version-banner" src="assets/mc_banner.png" alt="Minecraft Banner" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.75; transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; z-index:1;" />
-        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(8,8,15,1) 0%, rgba(8,8,15,0.4) 60%, transparent 100%); z-index:2;"></div>
+      <div class="download-banner-wrap">
+        <img id="dl-version-banner" src="assets/mc_banner.png" alt="Minecraft Banner" class="download-banner-img" />
+        <div class="download-banner-gradient"></div>
         
-        <!-- AI HUD Overlay -->
-        <div id="ai-hud" style="position:absolute; top:20px; right:20px; z-index:10; background:rgba(8, 8, 15, 0.85); border:1px solid var(--border-glow); border-radius:10px; padding:12px; font-family:monospace; font-size:0.75rem; width:280px; max-width:90%; color:#00ff88; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(8px); display:none; flex-direction:column; gap:6px; transition: border-color 0.5s ease;">
-          <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(0,255,136,0.2); padding-bottom:6px; margin-bottom:4px; font-weight:bold;">
-            <span style="display:flex; align-items:center; gap:6px;">
-              <span style="width:8px; height:8px; background:#00ff88; border-radius:50%; display:inline-block; animation:mc-pulse 1s infinite alternate;"></span>
-              🤖 IA ARTWORK FINDER
+        <!-- AI HUD Overlay (clean, sleek, responsive badge) -->
+        <div id="ai-hud" class="download-ai-hud">
+          <div class="ai-hud-top">
+            <span class="ai-hud-indicator">
+              <span class="ai-hud-dot"></span>
+              IA VERSION SCANNER
             </span>
-            <span style="color:#ff9f43; font-size:0.7rem;" id="ai-hud-status">BUSCANDO</span>
+            <span id="ai-hud-status" class="ai-hud-status">LISTO</span>
           </div>
-          <div id="ai-hud-log" style="line-height:1.4; height:85px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; padding-right:4px;">
-            <span style="color:#a855f7;">> Inicializando Módulo IA...</span>
+          <div id="ai-hud-log" class="ai-hud-log">
+            <span style="color:#a855f7;">> Versión sincronizada</span>
           </div>
         </div>
 
         <!-- Banner Content -->
-        <div style="position:relative; z-index:3; padding:32px 32px 20px; width:100%;">
-          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div class="download-banner-content">
+          <div class="download-banner-info-row">
             <div>
-              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
-                <span class="badge badge-new" id="dl-tag-badge" style="background:var(--purple-main); color:white; border:none; box-shadow:0 0 10px rgba(123,47,255,0.4); padding:4px 10px; font-size:0.75rem; border-radius:6px; transition: background-color 0.5s ease, box-shadow 0.5s ease;">Latest Release</span>
-                <span style="font-size:0.75rem; color:rgba(255,255,255,0.6); display:flex; align-items:center; gap:5px;">
-                  <span style="width:6px; height:6px; background:#00ff88; border-radius:50%;"></span> Extraído desde GitHub
+              <div class="download-banner-tags">
+                <span class="badge badge-new" id="dl-tag-badge">Latest Release</span>
+                <span class="download-source-tag">
+                  <span class="status-dot-green"></span> Extraído desde GitHub
                 </span>
               </div>
-              <h2 id="dl-version-title" style="font-family:'Cinzel', serif; font-size:2rem; margin:0; color:white; font-weight:900; text-shadow:0 2px 10px rgba(0,0,0,0.8);">Cargando versión...</h2>
+              <h2 id="dl-version-title" class="download-version-title">Minecraft Bedrock v...</h2>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <span style="background:rgba(0,255,136,0.15); border:1px solid rgba(0,255,136,0.3); color:#00ff88; padding:6px 14px; border-radius:999px; font-size:0.78rem; font-weight:700; display:flex; align-items:center; gap:4px;">✅ Verificado</span>
-              <span style="background:var(--bg-glass); border:1px solid var(--border-glow); color:var(--purple-glow); padding:6px 14px; border-radius:999px; font-size:0.78rem; font-weight:700; display:flex; align-items:center; gap:4px; transition: border-color 0.5s ease, color 0.5s ease;">📱 Android / APK</span>
+            <div class="download-banner-badges">
+              <span class="chip-badge verified">✅ Verificado</span>
+              <span class="chip-badge platform">📱 Android / APK</span>
             </div>
           </div>
           
@@ -128,75 +120,84 @@
       </div>
 
       <!-- Files grid -->
-      <div style="padding:32px;">
-        <div style="margin-bottom:20px;">
-          <h3 style="font-size:1rem; color:var(--text-muted); margin:0; font-weight:600;">Selecciona tu archivo:</h3>
+      <div class="download-files-container">
+        <div class="download-files-header">
+          <h3>📦 Selecciona tu archivo para instalar:</h3>
+          <span class="download-files-subtitle">APKs oficiales compatibles con Titan Community</span>
         </div>
 
         <div class="downloads-grid" id="downloads-list">
-          <div style="grid-column:1/-1; padding:50px; text-align:center; color:var(--text-muted);">
-            <div class="status-dot loading" style="display:inline-block; margin-right:10px;"></div>
-            Buscando archivos de descarga...
+          <div class="downloads-loading">
+            <div class="status-dot loading"></div>
+            <span>Buscando archivos de descarga desde GitHub...</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Info strip -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:24px;">
-      <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
-        <span style="font-size:2rem;">🔒</span>
+    <div class="download-features-grid">
+      <div class="download-feature-card reveal">
+        <span class="download-feature-icon">🔒</span>
         <div>
-          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">100% Seguro</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Descarga desde GitHub oficial</div>
+          <div class="download-feature-title">100% Seguro</div>
+          <div class="download-feature-sub">Descarga desde GitHub oficial</div>
         </div>
       </div>
-      <div class="reveal reveal-delay-1" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
-        <span style="font-size:2rem;">⚡</span>
+      <div class="download-feature-card reveal reveal-delay-1">
+        <span class="download-feature-icon">⚡</span>
         <div>
-          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Siempre Actualizado</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Última versión automática</div>
+          <div class="download-feature-title">Siempre Actualizado</div>
+          <div class="download-feature-sub">Última versión automática</div>
         </div>
       </div>
-      <div class="reveal reveal-delay-2" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
-        <span style="font-size:2rem;">🆓</span>
+      <div class="download-feature-card reveal reveal-delay-2">
+        <span class="download-feature-icon">🆓</span>
         <div>
-          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Totalmente Gratis</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Sin pagos ni suscripciones</div>
+          <div class="download-feature-title">Totalmente Gratis</div>
+          <div class="download-feature-sub">Sin pagos ni suscripciones</div>
         </div>
       </div>
-      <div class="reveal reveal-delay-3" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; align-items:center; gap:14px;">
-        <span style="font-size:2rem;">📱</span>
+      <div class="download-feature-card reveal reveal-delay-3">
+        <span class="download-feature-icon">📱</span>
         <div>
-          <div style="font-weight:700; font-size:0.9rem; margin-bottom:3px;">Android & +</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">32-bit y 64-bit disponibles</div>
+          <div class="download-feature-title">Android &amp; +</div>
+          <div class="download-feature-sub">32-bit y 64-bit disponibles</div>
         </div>
       </div>
     </div>
 
     <!-- Installation guide -->
-    <div class="reveal" style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:16px; padding:32px; margin-top:24px;">
-      <h3 style="font-family:'Cinzel', serif; font-size:1.1rem; margin-bottom:24px; color:var(--text-primary);">📖 Guía de Instalación</h3>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:20px;">
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">1</div>
-          <div style="font-weight:700; font-size:0.88rem;">Elige tu versión</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">32-bit para teléfonos antiguos, 64-bit para los modernos. Con música o sin ella.</div>
+    <div class="download-guide-card reveal">
+      <h3 class="download-guide-title">📖 Guía de Instalación Rápida</h3>
+      <div class="download-guide-steps">
+        <div class="download-step-item">
+          <div class="download-step-badge">1</div>
+          <div>
+            <div class="download-step-heading">Elige tu versión</div>
+            <div class="download-step-desc">64-bit para teléfonos modernos, 32-bit para antiguos.</div>
+          </div>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">2</div>
-          <div style="font-weight:700; font-size:0.88rem;">Descarga el APK</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Haz clic en el botón y espera que termine la descarga completa.</div>
+        <div class="download-step-item">
+          <div class="download-step-badge">2</div>
+          <div>
+            <div class="download-step-heading">Descarga el APK</div>
+            <div class="download-step-desc">Toca en Descargar APK y espera que finalice el archivo.</div>
+          </div>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--purple-main),var(--purple-deep)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:white;">3</div>
-          <div style="font-weight:700; font-size:0.88rem;">Permite fuentes externas</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Ve a Ajustes → Seguridad → Instalar apps desconocidas → Activar.</div>
+        <div class="download-step-item">
+          <div class="download-step-badge">3</div>
+          <div>
+            <div class="download-step-heading">Permite fuentes externas</div>
+            <div class="download-step-desc">Ajustes → Seguridad → Instalar apps desconocidas.</div>
+          </div>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--gold),#b8860b); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1rem; color:#1a0a00;">4</div>
-          <div style="font-weight:700; font-size:0.88rem;">¡A jugar!</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);">Instala el APK, únete a Titan Community y disfruta. IP en la sección Servidor.</div>
+        <div class="download-step-item">
+          <div class="download-step-badge gold">4</div>
+          <div>
+            <div class="download-step-heading">¡A jugar!</div>
+            <div class="download-step-desc">Instala el APK y conéctate al servidor de Titan Community.</div>
+          </div>
         </div>
       </div>
     </div>

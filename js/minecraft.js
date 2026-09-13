@@ -219,7 +219,7 @@ async function runAiAnalysis(versionString) {
   const cleanVersion = versionString.replace(/^v/i, '').replace(/^release[- ]/i, '').trim();
   
   const aiHud = document.getElementById('ai-hud');
-  if (aiHud) aiHud.style.display = 'flex';
+  if (aiHud && window.innerWidth > 768) aiHud.style.display = 'flex';
   
   const logEl = document.getElementById('ai-hud-log');
   if (logEl) logEl.innerHTML = '';
@@ -466,43 +466,48 @@ function renderDownloads(data, version) {
       sublabel = 'Carpeta comprimida con archivos del juego';
     }
 
-    const badge = is64
-      ? `<span style="background:rgba(123,47,255,0.2);color:var(--purple-glow);padding:2px 8px;border-radius:999px;font-size:0.7rem;font-weight:700;">64-bit</span>`
+    const recBadge = (is64 && hasMusic)
+      ? `<span style="background:rgba(255,215,0,0.18);color:var(--gold);border:1px solid rgba(255,215,0,0.4);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:800;">⭐ Recomendado</span>`
+      : '';
+    
+    const bitBadge = is64
+      ? `<span style="background:rgba(123,47,255,0.25);color:var(--purple-glow);border:1px solid rgba(123,47,255,0.4);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:700;">64-bit</span>`
       : is32
-      ? `<span style="background:rgba(255,107,53,0.2);color:#ff6b35;padding:2px 8px;border-radius:999px;font-size:0.7rem;font-weight:700;">32-bit</span>`
+      ? `<span style="background:rgba(255,107,53,0.25);color:#ff6b35;border:1px solid rgba(255,107,53,0.4);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:700;">32-bit</span>`
       : '';
     
     const musicBadge = hasMusic
-      ? `<span style="background:rgba(255,215,0,0.15);color:var(--gold);padding:2px 8px;border-radius:999px;font-size:0.7rem;font-weight:700;">🎵 Música</span>`
-      : '';
+      ? `<span style="background:rgba(0,255,136,0.15);color:#00ff88;border:1px solid rgba(0,255,136,0.3);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:700;">🎵 Música</span>`
+      : `<span style="background:rgba(255,255,255,0.06);color:var(--text-muted);border:1px solid rgba(255,255,255,0.12);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;">⚡ Liviano</span>`;
 
     return `
-      <div style="background:var(--bg-glass); border:1px solid var(--border-subtle); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:14px; transition:all 0.3s; cursor:default;"
-           onmouseover="this.style.borderColor='${color}';this.style.boxShadow='0 0 20px ${color}33';this.style.transform='translateY(-3px)';"
-           onmouseout="this.style.borderColor='var(--border-subtle)';this.style.boxShadow='none';this.style.transform='none';">
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,${color}22,${color}08);border:1px solid ${color}55;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+      <div class="dl-item-card" style="border-color:${color}44;">
+        <div class="dl-item-top">
+          <div class="dl-item-main">
+            <div class="dl-item-icon-wrap" style="background:linear-gradient(135deg,${color}25,${color}08); border:1px solid ${color}66;">
               ${getMinecraftIcon(name, version, is64, is32)}
             </div>
-            <div>
-              <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:4px;">${label}</div>
-              <div style="font-size:0.78rem; color:var(--text-muted);">${sublabel || name}</div>
+            <div style="min-width:0;">
+              <div class="dl-item-name">${label}</div>
+              <div class="dl-item-sub">${sublabel || name}</div>
             </div>
           </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">${badge}${musicBadge}</div>
+          <div class="dl-item-badges">
+            ${recBadge}
+            ${bitBadge}
+            ${musicBadge}
+          </div>
         </div>
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-          <div style="display:flex; gap:16px;">
-            <span style="font-size:0.8rem; color:var(--text-muted);">📦 <strong style="color:var(--text-secondary);">${size}</strong></span>
-            <span style="font-size:0.8rem; color:var(--text-muted);">📥 <strong style="color:var(--text-secondary);">${dl}</strong> descargas</span>
+        <div class="dl-item-bottom">
+          <div class="dl-item-stats">
+            <span>📦 <strong style="color:var(--text-primary);">${size}</strong></span>
+            <span>📥 <strong style="color:var(--text-primary);">${dl}</strong> descargas</span>
           </div>
           <a href="${asset.browser_download_url}" target="_blank" rel="noopener noreferrer"
-             style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:linear-gradient(135deg,${color},${color}cc);color:white;font-weight:700;font-size:0.85rem;text-decoration:none;transition:all 0.25s;white-space:nowrap;"
-             onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px ${color}55';"
-             onmouseout="this.style.transform='';this.style.boxShadow='';">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Descargar
+             class="dl-item-btn"
+             style="background:linear-gradient(135deg,${color},${color}dd); box-shadow:0 4px 15px ${color}44;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Descargar APK
           </a>
         </div>
       </div>

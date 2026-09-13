@@ -186,6 +186,9 @@ function getSafeImageUrl(url, name, type) {
 // Analiza el nombre del archivo con IA de Gemini para deducir el título, descripción exacta y palabra clave de búsqueda
 async function callGeminiAI(fileName) {
   try {
+    if (typeof GEMINI_API_KEY === 'undefined' || !GEMINI_API_KEY) {
+      return null;
+    }
     const promptText = `Eres un asistente experto en Minecraft Bedrock (Marketplace, Addons, Skins, Mundos, Shaders, Texturas).
 Analiza este nombre de archivo de Minecraft: "${fileName}".
 Identifica qué contenido es y responde ÚNICAMENTE en formato JSON plano (sin bloques markdown ni etiquetas html):
@@ -217,7 +220,7 @@ Identifica qué contenido es y responde ÚNICAMENTE en formato JSON plano (sin b
       }
     }
   } catch (e) {
-    console.warn('Gemini API call skipped or timed out:', e);
+    // Modo silencioso: la IA pasa fluidamente al motor Modrinth / Marketplace
   }
   return null;
 }
@@ -400,10 +403,55 @@ async function searchMCPEDL(query) {
   return null;
 }
 
+// SOURCE: Modrinth API Oficial (Acceso directo a catálogo de Mods, Shaders, Texturas y Mundos)
+async function searchModrinthAPI(query, fileType) {
+  try {
+    const clean = query.replace(/[^\w\s]/gi, ' ').replace(/\s+/g, ' ').trim();
+    if (!clean || clean.length < 2) return null;
+    
+    // Configurar búsqueda adaptada por facetas si es shader o texture
+    const facetParam = fileType === 'shader' ? '&facets=[["project_type:shader"]]'
+                     : fileType === 'texture' ? '&facets=[["project_type:resourcepack"]]'
+                     : fileType === 'world' ? '&facets=[["project_type:mod"]]' : '';
+
+    const url = 'https://api.modrinth.com/v2/search?query=' + encodeURIComponent(clean) + '&limit=4' + facetParam;
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && data.hits && data.hits.length > 0) {
+      for (const hit of data.hits) {
+        const title = hit.title || '';
+        const img = hit.featured_gallery || (hit.gallery && hit.gallery[0]) || hit.icon_url;
+        if (img && (isRelevantMatch(clean, title) || hit.slug.toLowerCase().includes(clean.toLowerCase().split(' ')[0]))) {
+          return {
+            name: title,
+            desc: hit.description || null,
+            imageUrl: img,
+            creator: hit.author || 'Minecraft Creator',
+            source: 'modrinth'
+          };
+        }
+      }
+      const first = data.hits[0];
+      const firstImg = first.featured_gallery || (first.gallery && first.gallery[0]) || first.icon_url;
+      if (firstImg && isRelevantMatch(clean, first.title)) {
+        return {
+          name: first.title,
+          desc: first.description || null,
+          imageUrl: firstImg,
+          creator: first.author || 'Minecraft Creator',
+          source: 'modrinth'
+        };
+      }
+    }
+  } catch (e) {}
+  return null;
+}
+
 // MARKETPLACE & WEB SEARCH
 // Busca en la web el primer resultado para: "[Nombre] [addon/world/skin/shader/textura] minecraft bedrock"
 async function searchMarketplace(query, fileType) {
-  const cacheKey = 'mkt_v13:' + query.toLowerCase() + ':' + (fileType || '');
+  const cacheKey = 'mkt_v15:' + query.toLowerCase() + ':' + (fileType || '');
   const cached = getCache()[cacheKey];
   if (cached !== undefined) return cached;
 
@@ -415,30 +463,35 @@ async function searchMarketplace(query, fileType) {
 
   const fullWebQuery = (query + ' ' + typeWord + ' minecraft bedrock').trim();
 
-  // 1) MCPEDL API: Búsqueda con la frase completa
-  let result = await searchMCPEDL(fullWebQuery);
+  // 1) Modrinth Oficial API: Acceso directo instantáneo a portadas HD oficiales
+  let result = await searchModrinthAPI(query, fileType);
 
-  // 2) Captura de Gameplay real de YouTube (extrae miniatura HD del video en acción)
+  // 2) MCPEDL API: Búsqueda con la frase completa
   if (!result || !result.imageUrl) {
-    result = await searchYouTubeThumbnail(query, fileType);
+    result = await searchMCPEDL(fullWebQuery);
   }
 
-  // 3) BedrockExplorer: Búsqueda con la frase completa
-  if (!result || !result.imageUrl) {
-    result = await searchBedrockExplorer(fullWebQuery);
-  }
-
-  // 4) Minecraft.net oficial Marketplace
-  if (!result || !result.imageUrl) {
-    result = await searchMinecraftNetMarketplace(query, fileType);
-  }
-
-  // 5) MCPEDL búsqueda directa por URL Slug
+  // 3) MCPEDL búsqueda directa por URL Slug
   if (!result || !result.imageUrl) {
     result = await searchMCPEDLBySlug(query, fileType);
   }
 
-  // 6) DuckDuckGo Web Proxy (Búsqueda general en la web para traer la primera página encontrada)
+  // 4) BedrockExplorer: Búsqueda con la frase completa
+  if (!result || !result.imageUrl) {
+    result = await searchBedrockExplorer(fullWebQuery);
+  }
+
+  // 5) Captura de Gameplay real de YouTube (extrae miniatura HD del video en acción)
+  if (!result || !result.imageUrl) {
+    result = await searchYouTubeThumbnail(query, fileType);
+  }
+
+  // 6) Minecraft.net oficial Marketplace
+  if (!result || !result.imageUrl) {
+    result = await searchMinecraftNetMarketplace(query, fileType);
+  }
+
+  // 7) DuckDuckGo Web Proxy (Búsqueda general en la web)
   if (!result || !result.imageUrl) {
     result = await searchDuckDuckGoWeb(fullWebQuery);
   }

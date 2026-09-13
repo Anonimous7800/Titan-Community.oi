@@ -1284,13 +1284,12 @@ a.w-full        { display: flex; width: 100%; }
     font-size: 0.78rem !important;
   }
 
-  /* Dropdowns posicionados exactamente en pantalla móvil */
-  #userDropdownMenu,
+  /* Dropdown de notificaciones en pantalla móvil */
   #notifDropdown {
     position: absolute !important;
     right: 0 !important;
     left: auto !important;
-    width: min(360px, calc(100vw - 20px)) !important;
+    width: min(340px, calc(100vw - 20px)) !important;
     max-height: 75vh !important;
     overflow-y: auto !important;
     border-radius: 16px !important;
@@ -1477,6 +1476,446 @@ a.w-full        { display: flex; width: 100%; }
   .product-card:active {
     transform: scale(0.985) !important;
     transition: transform 0.1s ease !important;
+  }
+}
+
+/* =============================================
+   DOWNLOAD PAGE (DESCARGAS.HTML) OPTIMIZATIONS
+   ============================================= */
+.download-page-section {
+  padding-top: 110px;
+  padding-bottom: 70px;
+  position: relative;
+  z-index: 1;
+}
+.download-hero-header {
+  margin-bottom: 30px;
+}
+.download-hero-header .section-sub {
+  margin: 0 auto 20px;
+  max-width: 580px;
+}
+.download-main-card {
+  background: var(--bg-card, #0f0f1c);
+  border: 1px solid var(--border-glow, rgba(123,47,255,0.35));
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(123,47,255,0.15);
+}
+.download-banner-wrap {
+  width: 100%;
+  min-height: 270px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.5s ease;
+}
+.download-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  z-index: 1;
+}
+.download-banner-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,15,1) 0%, rgba(8,8,15,0.55) 50%, rgba(8,8,15,0.2) 100%);
+  z-index: 2;
+}
+.download-ai-hud {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: rgba(8, 8, 15, 0.9);
+  border: 1px solid var(--border-glow, rgba(123,47,255,0.4));
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: monospace;
+  font-size: 0.74rem;
+  width: 250px;
+  max-width: 90%;
+  color: #00ff88;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  transition: border-color 0.5s ease;
+}
+.ai-hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0,255,136,0.2);
+  padding-bottom: 4px;
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+.ai-hud-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-hud-dot {
+  width: 7px;
+  height: 7px;
+  background: #00ff88;
+  border-radius: 50%;
+  display: inline-block;
+  animation: mc-pulse 1s infinite alternate;
+}
+.ai-hud-status {
+  color: #ff9f43;
+  font-size: 0.68rem;
+}
+.ai-hud-log {
+  line-height: 1.35;
+  height: 70px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 4px;
+}
+.download-banner-content {
+  position: relative;
+  z-index: 3;
+  padding: 24px 28px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.download-banner-info-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.download-banner-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.download-source-tag {
+  font-size: 0.74rem;
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.status-dot-green {
+  width: 6px;
+  height: 6px;
+  background: #00ff88;
+  border-radius: 50%;
+  display: inline-block;
+}
+.download-version-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.35rem, 3.5vw, 1.95rem);
+  margin: 0;
+  color: white;
+  font-weight: 900;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+.download-banner-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.chip-badge.verified {
+  background: rgba(0,255,136,0.15);
+  border: 1px solid rgba(0,255,136,0.3);
+  color: #00ff88;
+}
+.chip-badge.platform {
+  background: var(--bg-glass, rgba(255,255,255,0.06));
+  border: 1px solid var(--border-glow, rgba(123,47,255,0.3));
+  color: var(--purple-glow, #c77dff);
+}
+.download-files-container {
+  padding: 28px;
+}
+.download-files-header {
+  margin-bottom: 18px;
+}
+.download-files-header h3 {
+  font-size: 1.05rem;
+  color: var(--text-primary, #fff);
+  margin: 0 0 4px 0;
+  font-weight: 700;
+}
+.download-files-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted, #888);
+}
+.downloads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 16px;
+}
+.dl-item-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+.dl-item-card:hover {
+  transform: translateY(-2px);
+}
+.dl-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.dl-item-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.dl-item-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.dl-item-name {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--text-primary, #fff);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dl-item-sub {
+  font-size: 0.76rem;
+  color: var(--text-muted, #aaa);
+}
+.dl-item-badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.dl-item-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.dl-item-stats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.78rem;
+  color: var(--text-muted, #aaa);
+}
+.dl-item-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.86rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.dl-item-btn:hover {
+  transform: translateY(-2px);
+}
+.downloads-loading {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.download-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 24px;
+}
+.download-feature-card {
+  background: var(--bg-card, #0f0f1c);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+  border-radius: 14px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.download-feature-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+.download-feature-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-bottom: 2px;
+  color: var(--text-primary, #fff);
+}
+.download-feature-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted, #888);
+}
+.download-guide-card {
+  background: var(--bg-card, #0f0f1c);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-top: 24px;
+}
+.download-guide-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  margin-bottom: 20px;
+  color: var(--text-primary, #fff);
+}
+.download-guide-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.download-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.download-step-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple-main), var(--purple-deep));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: white;
+}
+.download-step-badge.gold {
+  background: linear-gradient(135deg, var(--gold), #b8860b);
+  color: #1a0a00;
+}
+.download-step-heading {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-primary, #fff);
+}
+.download-step-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted, #888);
+  line-height: 1.4;
+}
+
+/* Breakpoints para Descargas */
+@media (max-width: 900px) {
+  .download-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .download-guide-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .download-page-section {
+    padding-top: 85px;
+    padding-bottom: 50px;
+  }
+  .download-files-container {
+    padding: 18px 14px;
+  }
+  .download-banner-wrap {
+    min-height: 220px;
+  }
+  .download-banner-content {
+    padding: 16px 16px 14px;
+  }
+  .download-ai-hud {
+    display: none !important;
+  }
+  .dl-item-card {
+    padding: 14px;
+  }
+  .dl-item-bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dl-item-stats {
+    justify-content: space-between;
+  }
+  .dl-item-btn {
+    width: 100%;
+    min-height: 46px;
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .download-features-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .download-guide-steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .download-step-item {
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+    background: rgba(255,255,255,0.02);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .download-step-badge {
+    flex-shrink: 0;
   }
 }
 

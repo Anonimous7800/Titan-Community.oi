@@ -270,13 +270,11 @@ const ADDON_ITEMS = [
   // },
 ];
 
-/* ─ Borrado de lo que estaba subido para comenzar en blanco ── */
+/* ─ Limpieza y Gestión de Catálogo Dinámico (Iniciar en Blanco) ── */
 try {
-  if (!localStorage.getItem('titanWipedPreviousCatalogs_v2')) {
-    localStorage.setItem('titanCustomStoreItems', JSON.stringify([]));
-    localStorage.setItem('titanCustomRedeemItems', JSON.stringify([]));
-    localStorage.setItem('titanWipedPreviousCatalogs_v2', 'true');
-  }
+  localStorage.setItem('titanCustomStoreItems', JSON.stringify([]));
+  localStorage.setItem('titanCustomRedeemItems', JSON.stringify([]));
+  localStorage.setItem('titanCatalogWipedByAdmin', 'true');
 } catch (e) { }
 
 /* ─ Funciones de Persistencia Dinámica para Tienda y Canje ── */

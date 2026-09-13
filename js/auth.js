@@ -181,45 +181,57 @@
         border-radius: 999px;
       }
       .user-dropdown-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.72);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        z-index: 99990;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.25s ease;
-      }
-      .user-dropdown-backdrop.active {
-        opacity: 1;
-        pointer-events: auto;
+        display: none;
       }
       body.sheet-open {
         overflow: hidden !important;
       }
       .user-dropdown {
         position: absolute;
-        top: calc(100% + 8px);
+        top: calc(100% + 10px);
         right: 0;
-        width: 275px;
-        background: rgba(13,13,26,0.98);
+        width: 285px;
+        background: #0f0e1d;
         border: 1px solid var(--border-glow, rgba(123,47,255,0.4));
-        border-radius: 14px;
-        box-shadow: 0 12px 45px rgba(0,0,0,0.88);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        border-radius: 16px;
+        box-shadow: 0 16px 45px rgba(0,0,0,0.88), 0 0 20px rgba(123,47,255,0.15);
         padding: 12px;
         display: none;
         flex-direction: column;
         gap: 5px;
-        z-index: 2000;
-        animation: fadeInDropdown 0.2s ease-out forwards;
+        z-index: 2100;
         box-sizing: border-box;
       }
-      @keyframes fadeInDropdown {
-        from { opacity: 0; transform: translateY(-8px); }
-        to { opacity: 1; transform: translateY(0); }
+      @media (min-width: 769px) {
+        .user-dropdown {
+          position: absolute !important;
+          top: calc(100% + 10px) !important;
+          right: 0 !important;
+          left: auto !important;
+          bottom: auto !important;
+          width: 285px !important;
+          max-width: 285px !important;
+          max-height: calc(100vh - 90px) !important;
+          overflow-y: auto !important;
+          transform: none !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          border-radius: 16px !important;
+          border: 1px solid var(--border-glow, rgba(123,47,255,0.4)) !important;
+          background: #0f0e1d !important;
+          box-shadow: 0 16px 45px rgba(0,0,0,0.88), 0 0 20px rgba(123,47,255,0.15) !important;
+          display: none !important;
+          z-index: 2100 !important;
+        }
+        .user-dropdown.open {
+          display: flex !important;
+        }
+        .user-dropdown-handle {
+          display: none !important;
+        }
+        .user-dropdown-backdrop {
+          display: none !important;
+        }
       }
       .user-dropdown.open { display: flex; }
       .user-dropdown-handle {
@@ -1167,6 +1179,22 @@
         .user-dropdown-close-btn {
           display: flex;
         }
+        .user-dropdown-backdrop {
+          display: block !important;
+          position: fixed !important;
+          inset: 0 !important;
+          background: rgba(0, 0, 0, 0.72) !important;
+          backdrop-filter: blur(8px) !important;
+          -webkit-backdrop-filter: blur(8px) !important;
+          z-index: 99990 !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transition: opacity 0.25s ease !important;
+        }
+        .user-dropdown-backdrop.active {
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
         .user-dropdown {
           position: fixed !important;
           top: auto !important;
@@ -1175,17 +1203,15 @@
           right: 0 !important;
           width: 100vw !important;
           max-width: 100vw !important;
-          max-height: 86vh !important;
+          max-height: 88vh !important;
           box-sizing: border-box !important;
           border-radius: 24px 24px 0 0 !important;
-          border: 1px solid rgba(123, 47, 255, 0.45) !important;
+          border: 1px solid rgba(123, 47, 255, 0.5) !important;
           border-bottom: none !important;
-          background: #0d0d1c !important;
-          background: rgba(13, 13, 26, 0.98) !important;
-          backdrop-filter: blur(28px) !important;
-          -webkit-backdrop-filter: blur(28px) !important;
-          box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(123, 47, 255, 0.25) !important;
-          padding: 12px 18px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+          background: #0d0c18 !important;
+          background: linear-gradient(180deg, #131224 0%, #0a0914 100%) !important;
+          box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(123, 47, 255, 0.25) !important;
+          padding: 12px 18px calc(24px + env(safe-area-inset-bottom, 12px)) !important;
           gap: 8px !important;
           z-index: 99999 !important;
           transform: translateY(105%);
@@ -1206,7 +1232,16 @@
           font-size: 0.95rem !important;
           min-height: 50px !important;
           border-radius: 12px !important;
-          background: rgba(255,255,255,0.035) !important;
+          background: rgba(255,255,255,0.04) !important;
+          display: flex !important;
+          align-items: center !important;
+          cursor: pointer !important;
+          user-select: none !important;
+          -webkit-tap-highlight-color: transparent !important;
+        }
+        .user-dropdown-item:active {
+          background: rgba(123, 47, 255, 0.2) !important;
+          transform: scale(0.98);
         }
         .user-dropdown-item .user-dropdown-icon {
           font-size: 1.25rem !important;
@@ -4422,6 +4457,42 @@
     document.body.classList.remove('sheet-open');
   };
 
+  window.navUserDropdownGo = function(url) {
+    window.closeUserDropdown();
+    if (url) {
+      setTimeout(() => {
+        window.location.href = url;
+      }, 50);
+    }
+  };
+
+  window.navUserDropdownProfile = function() {
+    window.closeUserDropdown();
+    setTimeout(() => {
+      if (typeof window.openProfileModal === 'function') {
+        window.openProfileModal();
+      }
+    }, 90);
+  };
+
+  window.navUserDropdownInventory = function(filter) {
+    window.closeUserDropdown();
+    setTimeout(() => {
+      if (typeof window.openInventoryModal === 'function') {
+        window.openInventoryModal(filter || 'all');
+      }
+    }, 90);
+  };
+
+  window.navUserDropdownLogout = function() {
+    window.closeUserDropdown();
+    setTimeout(() => {
+      if (typeof logoutUser === 'function') {
+        logoutUser();
+      }
+    }, 60);
+  };
+
   window.toggleUserDropdown = function(e) {
     if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     const menu = document.getElementById('userDropdownMenu');
@@ -4445,11 +4516,23 @@
     if (isOpen) {
       window.closeUserDropdown();
     } else {
-      menu.classList.add('open');
-      backdrop.classList.add('active');
       if (window.innerWidth <= 768) {
+        // En móvil, trasladar el menú a document.body para desacoplarlo
+        // del stacking context de .navbar (que tiene backdrop-filter)
+        if (menu.parentElement !== document.body) {
+          document.body.appendChild(menu);
+        }
+        if (backdrop) backdrop.classList.add('active');
         document.body.classList.add('sheet-open');
+      } else {
+        const pillContainer = document.querySelector('.user-pill-container');
+        if (pillContainer && menu.parentElement !== pillContainer) {
+          pillContainer.appendChild(menu);
+        }
+        if (backdrop) backdrop.classList.remove('active');
+        document.body.classList.remove('sheet-open');
       }
+      menu.classList.add('open');
     }
   };
 
@@ -4457,7 +4540,10 @@
     const userContainer = document.getElementById('userAuthContainer');
     const menu = document.getElementById('userDropdownMenu');
     if (menu && menu.classList.contains('open')) {
-      if (!menu.contains(e.target) && (!userContainer || !userContainer.contains(e.target))) {
+      const pill = document.querySelector('.user-pill');
+      const clickedInsideMenu = menu.contains(e.target);
+      const clickedInsidePill = (userContainer && userContainer.contains(e.target)) || (pill && pill.contains(e.target));
+      if (!clickedInsideMenu && !clickedInsidePill) {
         window.closeUserDropdown();
       }
     }
@@ -4467,6 +4553,19 @@
       if (!notif.contains(e.target) && (!notifWrap || !notifWrap.contains(e.target))) {
         notif.classList.remove('open');
       }
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    const menu = document.getElementById('userDropdownMenu');
+    if (!menu) return;
+    if (window.innerWidth > 768) {
+      const pillContainer = document.querySelector('.user-pill-container');
+      if (pillContainer && menu.parentElement !== pillContainer) {
+        pillContainer.appendChild(menu);
+      }
+      document.body.classList.remove('sheet-open');
+      document.getElementById('userDropdownBackdrop')?.classList.remove('active');
     }
   });
 
@@ -4635,55 +4734,55 @@
                       <div style="color:var(--gold); font-weight:800; font-size:0.92rem;">${points} pts</div>
                     </div>
                   </div>
-                  <a href="canje.html" onclick="closeUserDropdown();" style="color:var(--gold); font-size:0.75rem; font-weight:700; text-decoration:none; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.3); padding:4px 9px; border-radius:6px; transition:all 0.2s;">
+                  <button type="button" onclick="window.navUserDropdownGo('canje.html')" style="color:var(--gold); font-size:0.75rem; font-weight:700; text-decoration:none; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.3); padding:5px 11px; border-radius:6px; cursor:pointer; transition:all 0.2s;">
                     Canjear →
-                  </a>
+                  </button>
                 </div>
               </div>
 
               <!-- ENLACES DEL MENÚ PERSONALIZADO -->
               <div class="user-dropdown-body">
-                <button type="button" onclick="closeUserDropdown(); openProfileModal();" class="user-dropdown-item item-profile">
+                <button type="button" onclick="window.navUserDropdownProfile()" class="user-dropdown-item item-profile">
                   <span class="user-dropdown-icon">👤</span>
                   <span class="user-dropdown-text">Mi Perfil & App Hub</span>
                   <span class="user-dropdown-tag" style="background:rgba(0,255,136,0.15); color:#00ff88; border:1px solid rgba(0,255,136,0.3);">ACTIVO</span>
                 </button>
-                <button type="button" onclick="closeUserDropdown(); openInventoryModal();" class="user-dropdown-item item-inventory">
+                <button type="button" onclick="window.navUserDropdownInventory('all')" class="user-dropdown-item item-inventory">
                   <span class="user-dropdown-icon">🎒</span>
                   <span class="user-dropdown-text">Mi Inventario de Items</span>
                   <span class="user-dropdown-arrow">›</span>
                 </button>
-                <a href="servidor.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                <button type="button" onclick="window.navUserDropdownGo('servidor.html')" class="user-dropdown-item">
                   <span class="user-dropdown-icon">⚔️</span>
                   <span class="user-dropdown-text">Mi Servidor & Estado</span>
                   <span class="user-dropdown-arrow">›</span>
-                </a>
-                <a href="canje.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                </button>
+                <button type="button" onclick="window.navUserDropdownGo('canje.html')" class="user-dropdown-item">
                   <span class="user-dropdown-icon">⭐</span>
                   <span class="user-dropdown-text">Canjear Recompensas</span>
                   <span class="user-dropdown-arrow">›</span>
-                </a>
-                <a href="tienda.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                </button>
+                <button type="button" onclick="window.navUserDropdownGo('tienda.html')" class="user-dropdown-item">
                   <span class="user-dropdown-icon">🛒</span>
                   <span class="user-dropdown-text">Tienda & Carrito</span>
                   <span class="user-dropdown-arrow">›</span>
-                </a>
-                <a href="descargas.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                </button>
+                <button type="button" onclick="window.navUserDropdownGo('descargas.html')" class="user-dropdown-item">
                   <span class="user-dropdown-icon">📥</span>
                   <span class="user-dropdown-text">Zona de Descargas</span>
                   <span class="user-dropdown-arrow">›</span>
-                </a>
+                </button>
                 ${isAdmin ? `
-                  <a href="admin.html" onclick="closeUserDropdown();" class="user-dropdown-item admin-btn">
+                  <button type="button" onclick="window.navUserDropdownGo('admin.html')" class="user-dropdown-item admin-btn">
                     <span class="user-dropdown-icon">⚡</span>
                     <span class="user-dropdown-text">Panel de Administrador</span>
                     <span class="user-dropdown-tag" style="background:rgba(255,215,0,0.2); color:#ffd700; border:1px solid rgba(255,215,0,0.4);">ADMIN</span>
-                  </a>
+                  </button>
                 ` : ''}
 
                 <div class="user-dropdown-divider"></div>
 
-                <button type="button" class="user-dropdown-item danger" onclick="closeUserDropdown(); logoutUser();">
+                <button type="button" class="user-dropdown-item danger" onclick="window.navUserDropdownLogout()">
                   <span class="user-dropdown-icon">🚪</span>
                   <span class="user-dropdown-text">Cerrar Sesión</span>
                 </button>
