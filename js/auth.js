@@ -180,52 +180,161 @@
         padding: 2px 7px;
         border-radius: 999px;
       }
+      .user-dropdown-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 99990;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+      .user-dropdown-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      body.sheet-open {
+        overflow: hidden !important;
+      }
       .user-dropdown {
         position: absolute;
         top: calc(100% + 8px);
         right: 0;
-        width: 240px;
+        width: 275px;
         background: rgba(13,13,26,0.98);
         border: 1px solid var(--border-glow, rgba(123,47,255,0.4));
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.85);
+        border-radius: 14px;
+        box-shadow: 0 12px 45px rgba(0,0,0,0.88);
         backdrop-filter: blur(20px);
-        padding: 10px;
+        -webkit-backdrop-filter: blur(20px);
+        padding: 12px;
         display: none;
         flex-direction: column;
         gap: 5px;
         z-index: 2000;
         animation: fadeInDropdown 0.2s ease-out forwards;
+        box-sizing: border-box;
       }
       @keyframes fadeInDropdown {
         from { opacity: 0; transform: translateY(-8px); }
         to { opacity: 1; transform: translateY(0); }
       }
       .user-dropdown.open { display: flex; }
+      .user-dropdown-handle {
+        width: 44px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        margin: 2px auto 12px auto;
+        display: none;
+      }
       .user-dropdown-header {
-        padding: 8px 10px;
+        padding: 4px 4px 10px 4px;
         border-bottom: 1px solid rgba(255,255,255,0.08);
-        margin-bottom: 4px;
+        margin-bottom: 6px;
+      }
+      .user-dropdown-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: #fff;
+        font-size: 0.95rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+      }
+      .user-dropdown-close-btn:hover,
+      .user-dropdown-close-btn:active {
+        background: rgba(255,61,0,0.25);
+        border-color: rgba(255,61,0,0.45);
+        color: #ff6b6b;
+      }
+      .user-dropdown-balance-card {
+        background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(123,47,255,0.08));
+        border: 1px solid rgba(255,215,0,0.25);
+        border-radius: 8px;
+        padding: 8px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+      }
+      .user-dropdown-body {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
       }
       .user-dropdown-item {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
-        font-size: 0.82rem;
+        gap: 10px;
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        font-family: inherit;
         color: var(--text-secondary, #ccc);
         text-decoration: none;
-        border-radius: 6px;
+        border-radius: 8px;
         transition: all 0.2s;
-        border: none;
-        background: transparent;
+        border: 1px solid transparent;
+        background: rgba(255,255,255,0.02);
         width: 100%;
         text-align: left;
         cursor: pointer;
+        box-sizing: border-box;
       }
-      .user-dropdown-item:hover {
-        background: rgba(123,47,255,0.15);
+      .user-dropdown-item:hover,
+      .user-dropdown-item:active {
+        background: rgba(123,47,255,0.18);
+        border-color: rgba(123,47,255,0.35);
         color: #fff;
+      }
+      .user-dropdown-item .user-dropdown-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .user-dropdown-item .user-dropdown-text {
+        flex: 1;
+        font-weight: 600;
+      }
+      .user-dropdown-item .user-dropdown-arrow {
+        color: var(--text-muted, #777);
+        font-size: 1.15rem;
+        line-height: 1;
+      }
+      .user-dropdown-item .user-dropdown-tag {
+        font-size: 0.62rem;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+      }
+      .user-dropdown-item.item-profile {
+        background: rgba(0,255,136,0.07);
+        border-color: rgba(0,255,136,0.22);
+        color: #00ff88;
+      }
+      .user-dropdown-item.item-profile:hover,
+      .user-dropdown-item.item-profile:active {
+        background: rgba(0,255,136,0.16);
+        border-color: rgba(0,255,136,0.4);
+      }
+      .user-dropdown-item.item-inventory {
+        color: var(--gold, #ffd700);
+        border-color: rgba(255,215,0,0.15);
+      }
+      .user-dropdown-item.item-inventory:hover,
+      .user-dropdown-item.item-inventory:active {
+        background: rgba(255,215,0,0.12);
+        border-color: rgba(255,215,0,0.35);
       }
       .user-dropdown-item.admin-btn {
         background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,107,53,0.15));
@@ -233,13 +342,24 @@
         color: var(--gold, #ffd700);
         font-weight: 700;
       }
-      .user-dropdown-item.admin-btn:hover {
+      .user-dropdown-item.admin-btn:hover,
+      .user-dropdown-item.admin-btn:active {
         background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,107,53,0.25));
         box-shadow: 0 0 15px rgba(255,215,0,0.3);
       }
-      .user-dropdown-item.danger:hover {
+      .user-dropdown-item.danger {
+        color: #ff7675;
+      }
+      .user-dropdown-item.danger:hover,
+      .user-dropdown-item.danger:active {
         background: rgba(255,61,0,0.15);
-        color: #ff6b6b;
+        border-color: rgba(255,61,0,0.35);
+        color: #ff5252;
+      }
+      .user-dropdown-divider {
+        height: 1px;
+        background: rgba(255,255,255,0.08);
+        margin: 4px 0;
       }
       .google-auth-btn {
         width: 100%;
@@ -1041,12 +1161,66 @@
           grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)) !important;
           gap: 6px !important;
         }
-        .user-dropdown, .notif-dropdown {
-          width: calc(100vw - 24px);
-          right: 0;
-          left: auto;
-          max-height: 72vh;
-          overflow-y: auto;
+        .user-dropdown-handle {
+          display: block;
+        }
+        .user-dropdown-close-btn {
+          display: flex;
+        }
+        .user-dropdown {
+          position: fixed !important;
+          top: auto !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          max-height: 86vh !important;
+          box-sizing: border-box !important;
+          border-radius: 24px 24px 0 0 !important;
+          border: 1px solid rgba(123, 47, 255, 0.45) !important;
+          border-bottom: none !important;
+          background: #0d0d1c !important;
+          background: rgba(13, 13, 26, 0.98) !important;
+          backdrop-filter: blur(28px) !important;
+          -webkit-backdrop-filter: blur(28px) !important;
+          box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(123, 47, 255, 0.25) !important;
+          padding: 12px 18px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+          gap: 8px !important;
+          z-index: 99999 !important;
+          transform: translateY(105%);
+          transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+          opacity: 0;
+          display: flex !important;
+          pointer-events: none;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch;
+        }
+        .user-dropdown.open {
+          transform: translateY(0) !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
+        .user-dropdown-item {
+          padding: 12px 14px !important;
+          font-size: 0.95rem !important;
+          min-height: 50px !important;
+          border-radius: 12px !important;
+          background: rgba(255,255,255,0.035) !important;
+        }
+        .user-dropdown-item .user-dropdown-icon {
+          font-size: 1.25rem !important;
+          width: 28px !important;
+        }
+        .notif-dropdown {
+          position: fixed !important;
+          top: 66px !important;
+          right: 12px !important;
+          left: 12px !important;
+          width: auto !important;
+          max-width: calc(100vw - 24px) !important;
+          max-height: 75vh !important;
+          z-index: 99995 !important;
         }
       }
 
@@ -4239,18 +4413,66 @@
     }
   };
 
+  window.closeUserDropdown = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    const menu = document.getElementById('userDropdownMenu');
+    if (menu) menu.classList.remove('open');
+    const backdrop = document.getElementById('userDropdownBackdrop');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.classList.remove('sheet-open');
+  };
+
   window.toggleUserDropdown = function(e) {
-    if (e) e.stopPropagation();
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     const menu = document.getElementById('userDropdownMenu');
     const notif = document.getElementById('notifDropdown');
     if (notif) notif.classList.remove('open');
-    if (menu) menu.classList.toggle('open');
+    if (!menu) return;
+
+    let backdrop = document.getElementById('userDropdownBackdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.id = 'userDropdownBackdrop';
+      backdrop.className = 'user-dropdown-backdrop';
+      backdrop.onclick = function(ev) {
+        ev.stopPropagation();
+        window.closeUserDropdown();
+      };
+      document.body.appendChild(backdrop);
+    }
+
+    const isOpen = menu.classList.contains('open');
+    if (isOpen) {
+      window.closeUserDropdown();
+    } else {
+      menu.classList.add('open');
+      backdrop.classList.add('active');
+      if (window.innerWidth <= 768) {
+        document.body.classList.add('sheet-open');
+      }
+    }
   };
 
   document.addEventListener('click', (e) => {
     const userContainer = document.getElementById('userAuthContainer');
-    if (userContainer && !userContainer.contains(e.target)) {
-      document.getElementById('userDropdownMenu')?.classList.remove('open');
+    const menu = document.getElementById('userDropdownMenu');
+    if (menu && menu.classList.contains('open')) {
+      if (!menu.contains(e.target) && (!userContainer || !userContainer.contains(e.target))) {
+        window.closeUserDropdown();
+      }
+    }
+    const notif = document.getElementById('notifDropdown');
+    if (notif && notif.classList.contains('open')) {
+      const notifWrap = document.querySelector('.notif-pill-wrap');
+      if (!notif.contains(e.target) && (!notifWrap || !notifWrap.contains(e.target))) {
+        notif.classList.remove('open');
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeUserDropdown();
       document.getElementById('notifDropdown')?.classList.remove('open');
     }
   });
@@ -4293,16 +4515,19 @@
           li.style.display = user ? 'none' : '';
         }
       });
-
-      // Los links de miembro (Perfil, Inventario, Puntos, Admin) van en el
-      // dropdown del usuario (← ya está implementado más abajo), NO en el nav
-      // principal para evitar desbordamiento cuando hay muchos items.
     }
 
     // ━━ 2. MENÚ DE USUARIO Y CENTRO DE NOTIFICACIONES (ZONA SUPERIOR DERECHA) ━━
+    const navCta = document.querySelector('.nav-cta');
+    if (navCta) {
+      // Ocultar botones estáticos como '🛒 Tienda' cuando hay sesión activa para evitar duplicados
+      navCta.querySelectorAll(':scope > a.btn, :scope > a.btn-primary, :scope > a.btn-discord').forEach(btn => {
+        btn.style.display = user ? 'none' : '';
+      });
+    }
+
     let container = document.getElementById('userAuthContainer');
     if (!container) {
-      const navCta = document.querySelector('.nav-cta');
       if (!navCta) return;
       container = document.createElement('div');
       container.id = 'userAuthContainer';
@@ -4378,59 +4603,91 @@
               <span style="font-size:0.6rem; opacity:0.7;">▼</span>
             </div>
 
-            <!-- MENÚ DE MIEMBRO EXCLUSIVO -->
+            <!-- MENÚ DE MIEMBRO EXCLUSIVO (BOTTOM-SHEET EN MÓVIL) -->
             <div class="user-dropdown" id="userDropdownMenu">
+              <div class="user-dropdown-handle"></div>
+
               <div class="user-dropdown-header">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                  <img class="${user.avatarAura || ''}" src="${getUserAvatar(user, 40)}" onerror="this.src='assets/logo.png'" style="width:38px; height:38px; border-radius:8px; border:2px solid var(--gold); object-fit:cover; background:#000;" alt="${user.nick}" />
-                  <div style="flex:1; min-width:0;">
-                    <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                      ${user.nick}
-                    </div>
-                    <div style="display:flex; align-items:center; gap:5px; margin-top:2px;">
-                      <span style="background:${isAdmin ? 'var(--gold)' : 'rgba(123,47,255,0.3)'}; color:${isAdmin ? '#000' : '#c77dff'}; font-weight:800; font-size:0.6rem; padding:1px 5px; border-radius:3px;">
-                        ${roleLabel}
-                      </span>
-                      ${providerLabel}
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                  <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                    <img class="${user.avatarAura || ''}" src="${getUserAvatar(user, 44)}" onerror="this.src='assets/logo.png'" style="width:40px; height:40px; border-radius:10px; border:2px solid var(--gold); object-fit:cover; background:#000; flex-shrink:0;" alt="${user.nick}" />
+                    <div style="min-width:0;">
+                      <div style="font-weight:800; color:var(--text-primary); font-size:0.98rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        ${user.nick}
+                      </div>
+                      <div style="display:flex; align-items:center; gap:6px; margin-top:2px; flex-wrap:wrap;">
+                        <span style="background:${isAdmin ? 'linear-gradient(135deg, #ffd700, #ff6b35)' : 'rgba(123,47,255,0.3)'}; color:${isAdmin ? '#000' : '#c77dff'}; font-weight:800; font-size:0.62rem; padding:1px 6px; border-radius:4px;">
+                          ${roleLabel}
+                        </span>
+                        ${providerLabel}
+                      </div>
                     </div>
                   </div>
+                  <!-- Botón de cerrar para celular -->
+                  <button type="button" class="user-dropdown-close-btn" onclick="closeUserDropdown(event)" aria-label="Cerrar menú">✕</button>
                 </div>
-                <div style="background:rgba(255,215,0,0.08); border:1px solid rgba(255,215,0,0.25); border-radius:6px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.78rem;">
-                  <span style="color:var(--text-muted);">Saldo Titan:</span>
-                  <span style="color:var(--gold); font-weight:800;">⭐ ${points} pts</span>
+
+                <div class="user-dropdown-balance-card">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.15rem;">⭐</span>
+                    <div>
+                      <div style="color:var(--text-muted); font-size:0.65rem; text-transform:uppercase; font-weight:700; letter-spacing:0.4px;">Saldo Titan</div>
+                      <div style="color:var(--gold); font-weight:800; font-size:0.92rem;">${points} pts</div>
+                    </div>
+                  </div>
+                  <a href="canje.html" onclick="closeUserDropdown();" style="color:var(--gold); font-size:0.75rem; font-weight:700; text-decoration:none; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.3); padding:4px 9px; border-radius:6px; transition:all 0.2s;">
+                    Canjear →
+                  </a>
                 </div>
               </div>
 
               <!-- ENLACES DEL MENÚ PERSONALIZADO -->
-              <a href="#" onclick="openProfileModal(); return false;" class="user-dropdown-item" style="color:#00ff88; font-weight:700; background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2);">
-                <span>👤</span> <span>Mi Perfil & App Hub</span>
-              </a>
-              <a href="#" onclick="openInventoryModal(); return false;" class="user-dropdown-item" style="color:var(--gold); font-weight:600;">
-                <span>🎒</span> <span>Mi Inventario de Items</span>
-              </a>
-              <a href="servidor.html" class="user-dropdown-item">
-                <span>⚔️</span> <span>Mi Servidor & Estado</span>
-              </a>
-              <a href="canje.html" class="user-dropdown-item">
-                <span>⭐</span> <span>Canjear Recompensas</span>
-              </a>
-              <a href="tienda.html" class="user-dropdown-item">
-                <span>🛒</span> <span>Tienda & Carrito</span>
-              </a>
-              <a href="descargas.html" class="user-dropdown-item">
-                <span>📥</span> <span>Zona de Descargas</span>
-              </a>
-              ${isAdmin ? `
-                <a href="admin.html" class="user-dropdown-item admin-btn">
-                  <span>⚡</span> <span>Panel de Administrador</span>
+              <div class="user-dropdown-body">
+                <button type="button" onclick="closeUserDropdown(); openProfileModal();" class="user-dropdown-item item-profile">
+                  <span class="user-dropdown-icon">👤</span>
+                  <span class="user-dropdown-text">Mi Perfil & App Hub</span>
+                  <span class="user-dropdown-tag" style="background:rgba(0,255,136,0.15); color:#00ff88; border:1px solid rgba(0,255,136,0.3);">ACTIVO</span>
+                </button>
+                <button type="button" onclick="closeUserDropdown(); openInventoryModal();" class="user-dropdown-item item-inventory">
+                  <span class="user-dropdown-icon">🎒</span>
+                  <span class="user-dropdown-text">Mi Inventario de Items</span>
+                  <span class="user-dropdown-arrow">›</span>
+                </button>
+                <a href="servidor.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                  <span class="user-dropdown-icon">⚔️</span>
+                  <span class="user-dropdown-text">Mi Servidor & Estado</span>
+                  <span class="user-dropdown-arrow">›</span>
                 </a>
-              ` : ''}
+                <a href="canje.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                  <span class="user-dropdown-icon">⭐</span>
+                  <span class="user-dropdown-text">Canjear Recompensas</span>
+                  <span class="user-dropdown-arrow">›</span>
+                </a>
+                <a href="tienda.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                  <span class="user-dropdown-icon">🛒</span>
+                  <span class="user-dropdown-text">Tienda & Carrito</span>
+                  <span class="user-dropdown-arrow">›</span>
+                </a>
+                <a href="descargas.html" onclick="closeUserDropdown();" class="user-dropdown-item">
+                  <span class="user-dropdown-icon">📥</span>
+                  <span class="user-dropdown-text">Zona de Descargas</span>
+                  <span class="user-dropdown-arrow">›</span>
+                </a>
+                ${isAdmin ? `
+                  <a href="admin.html" onclick="closeUserDropdown();" class="user-dropdown-item admin-btn">
+                    <span class="user-dropdown-icon">⚡</span>
+                    <span class="user-dropdown-text">Panel de Administrador</span>
+                    <span class="user-dropdown-tag" style="background:rgba(255,215,0,0.2); color:#ffd700; border:1px solid rgba(255,215,0,0.4);">ADMIN</span>
+                  </a>
+                ` : ''}
 
-              <div style="height:1px; background:rgba(255,255,255,0.08); margin:4px 0;"></div>
+                <div class="user-dropdown-divider"></div>
 
-              <button class="user-dropdown-item danger" onclick="logoutUser()">
-                <span>🚪</span> <span>Cerrar Sesión</span>
-              </button>
+                <button type="button" class="user-dropdown-item danger" onclick="closeUserDropdown(); logoutUser();">
+                  <span class="user-dropdown-icon">🚪</span>
+                  <span class="user-dropdown-text">Cerrar Sesión</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
