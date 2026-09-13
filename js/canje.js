@@ -372,7 +372,7 @@ function confirmRedeem() {
   // Guardar en la lista de canjes para visualización DIRECTA en el panel admin con el nombre de Minecraft
   try {
     const redeems = JSON.parse(localStorage.getItem('titanRedeemOrders') || '[]');
-    redeems.unshift({
+    const newRedeem = {
       id: 'CANJE-' + Date.now().toString(36).toUpperCase(),
       date: new Date().toLocaleDateString('es') + ' ' + new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }),
       mcNick: mcNick,
@@ -382,8 +382,15 @@ function confirmRedeem() {
       itemName: pendingRedeem.name,
       cost: cost,
       status: 'Pendiente'
-    });
+    };
+    redeems.unshift(newRedeem);
     localStorage.setItem('titanRedeemOrders', JSON.stringify(redeems));
+    if (window.TitanFirebase && typeof window.TitanFirebase.saveRedeemOrder === 'function') {
+      window.TitanFirebase.saveRedeemOrder(newRedeem);
+    }
+    if (window.TitanFirebase && typeof window.TitanFirebase.saveProfile === 'function') {
+      window.TitanFirebase.saveProfile(user.nick, playerData);
+    }
   } catch(e) {}
 
   updateUI();

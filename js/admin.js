@@ -217,6 +217,9 @@ window.promptAddPoints = function(nick) {
   });
 
   localStorage.setItem('titanProfiles', JSON.stringify(profiles));
+  if (window.TitanFirebase && typeof window.TitanFirebase.saveProfile === 'function') {
+    window.TitanFirebase.saveProfile(nick, profiles[nick]);
+  }
 
   // Notificar al jugador
   if (typeof TitanAuth !== 'undefined' && typeof TitanAuth.addNotification === 'function') {
@@ -263,6 +266,9 @@ function deductPointsLogic(nick, amount) {
   });
 
   localStorage.setItem('titanProfiles', JSON.stringify(profiles));
+  if (window.TitanFirebase && typeof window.TitanFirebase.saveProfile === 'function') {
+    window.TitanFirebase.saveProfile(nick, profiles[nick]);
+  }
 
   // Notificación al jugador
   if (typeof TitanAuth !== 'undefined' && typeof TitanAuth.addNotification === 'function') {
@@ -671,6 +677,9 @@ window.editRedeemMinecraftNick = function(index) {
   redeems[index].mcNick = trimmed;
   redeems[index].nick = trimmed;
   localStorage.setItem('titanRedeemOrders', JSON.stringify(redeems));
+  if (window.TitanFirebase && typeof window.TitanFirebase.syncAllRedeemOrders === 'function') {
+    window.TitanFirebase.syncAllRedeemOrders(redeems);
+  }
   showToast(`🎮 Nick de Minecraft actualizado a "${trimmed}" en este canje`, 'success');
   renderRedeemOrdersTable();
 };
@@ -682,6 +691,9 @@ window.toggleRedeemStatus = function(index) {
   const newStatus = (cur === 'Entregado') ? 'Pendiente' : 'Entregado';
   redeems[index].status = newStatus;
   localStorage.setItem('titanRedeemOrders', JSON.stringify(redeems));
+  if (window.TitanFirebase && typeof window.TitanFirebase.syncAllRedeemOrders === 'function') {
+    window.TitanFirebase.syncAllRedeemOrders(redeems);
+  }
   const mcNick = redeems[index].mcNick || redeems[index].nick || 'Jugador';
   showToast(`Canje de "${mcNick}" actualizado a: ${newStatus}`, 'success');
   renderRedeemOrdersTable();
@@ -692,6 +704,9 @@ window.deleteRedeemOrder = function(index) {
   const redeems = JSON.parse(localStorage.getItem('titanRedeemOrders') || '[]');
   redeems.splice(index, 1);
   localStorage.setItem('titanRedeemOrders', JSON.stringify(redeems));
+  if (window.TitanFirebase && typeof window.TitanFirebase.syncAllRedeemOrders === 'function') {
+    window.TitanFirebase.syncAllRedeemOrders(redeems);
+  }
   showToast('Registro de canje eliminado', 'info');
   renderRedeemOrdersTable();
 };

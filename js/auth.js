@@ -57,6 +57,13 @@
 
   function saveUsers(users) {
     localStorage.setItem('titanUsers', JSON.stringify(users));
+    if (window.TitanFirebase && typeof window.TitanFirebase.saveUser === 'function') {
+      try {
+        Object.values(users).forEach(u => {
+          if (u && u.nick) window.TitanFirebase.saveUser(u);
+        });
+      } catch (e) {}
+    }
   }
 
   function getUserAvatar(userOrNick, size = 64) {
@@ -91,6 +98,9 @@
         }]
       };
       localStorage.setItem('titanProfiles', JSON.stringify(profiles));
+      if (window.TitanFirebase && typeof window.TitanFirebase.saveProfile === 'function') {
+        window.TitanFirebase.saveProfile(nick, profiles[nick]);
+      }
     }
     
     // Si canje.js está activo, sincronizar playerData
@@ -941,36 +951,95 @@
           max-height: 52vh;
         }
         .profile-app-dialog {
-          padding: 20px 16px;
-          border-radius: var(--radius-lg, 16px);
-          max-height: 95vh;
+          padding: 16px 14px 26px !important;
+          border-radius: 22px 22px 0 0 !important;
+          max-height: 92vh !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          box-sizing: border-box !important;
+          margin-top: auto !important;
+        }
+        .profile-tabs-nav {
+          display: flex !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+          scrollbar-width: none !important;
+          white-space: nowrap !important;
+          border-radius: 12px !important;
+          gap: 5px !important;
+          padding: 4px !important;
+          margin-bottom: 14px !important;
+          -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
+        }
+        .profile-tabs-nav::-webkit-scrollbar { display: none !important; }
+        .profile-tab-btn {
+          flex: 0 0 auto !important;
+          padding: 8px 12px !important;
+          font-size: 0.76rem !important;
+          white-space: nowrap !important;
         }
         .profile-banner-card {
-          flex-direction: column;
-          text-align: center;
-          padding: 16px;
-          gap: 12px;
+          flex-direction: column !important;
+          text-align: center !important;
+          align-items: center !important;
+          padding: 14px 12px !important;
+          gap: 12px !important;
         }
         .profile-banner-card > div {
           display: flex;
           flex-direction: column;
           align-items: center;
+          width: 100%;
+        }
+        .profile-skin-cube {
+          width: 76px !important;
+          height: 76px !important;
         }
         .profile-stats-grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 8px;
+          grid-template-columns: repeat(2, 1fr) !important;
+          gap: 8px !important;
+        }
+        .profile-stat-box {
+          padding: 10px 12px !important;
+        }
+        .profile-stat-value {
+          font-size: 1.15rem !important;
+        }
+        .profile-grid-2col {
+          grid-template-columns: 1fr !important;
+          gap: 10px !important;
+        }
+        .profile-edit-avatar-card {
+          flex-direction: column !important;
+          text-align: center !important;
+          align-items: center !important;
+          padding: 14px !important;
+          gap: 14px !important;
+        }
+        .profile-edit-avatar-card > div:last-child {
+          min-width: 0 !important;
+          width: 100% !important;
+        }
+        .profile-edit-avatar-card .btn {
+          width: 100% !important;
+          justify-content: center !important;
         }
         .app-features-grid {
-          grid-template-columns: 1fr;
-          gap: 8px;
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
         }
         .app-install-banner {
-          flex-direction: column;
-          text-align: center;
-          padding: 14px;
+          flex-direction: column !important;
+          text-align: center !important;
+          padding: 14px 12px !important;
+          gap: 10px !important;
         }
         .app-install-banner button {
-          width: 100%;
+          width: 100% !important;
+        }
+        .avatar-presets-grid {
+          grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)) !important;
+          gap: 6px !important;
         }
         .user-dropdown, .notif-dropdown {
           width: calc(100vw - 24px);
@@ -988,6 +1057,14 @@
         .notif-btn { width: 42px; height: 42px; }
         .user-pill { padding: 6px 10px !important; gap: 6px !important; }
         .modal-close-btn { top: 12px !important; right: 12px !important; }
+        .profile-tab-btn {
+          padding: 7px 10px !important;
+          font-size: 0.70rem !important;
+        }
+        .aura-pill-btn {
+          padding: 6px 10px !important;
+          font-size: 0.72rem !important;
+        }
       }
 
 
@@ -1339,6 +1416,22 @@
         border-color: var(--purple-glow);
         box-shadow: 0 0 0 3px rgba(123,47,255,0.25), inset 0 2px 4px rgba(0,0,0,0.3);
         background: rgba(12,12,24,0.95);
+      }
+      .profile-grid-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .profile-edit-avatar-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border-glow);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
       }
     `;
     document.head.appendChild(style);
@@ -2555,6 +2648,9 @@
     } catch (e) {}
     broadcasts.unshift(notifObj);
     localStorage.setItem('titanBroadcastNotifs', JSON.stringify(broadcasts.slice(0, 50)));
+    if (window.TitanFirebase && typeof window.TitanFirebase.saveBroadcast === 'function') {
+      window.TitanFirebase.saveBroadcast(broadcasts.slice(0, 50));
+    }
 
     // 2. Distribuir a cada usuario registrado en titanUsers
     let users = [];
@@ -3492,7 +3588,7 @@
         <!-- ════════ PANE 2: PERSONALIZAR FOTO & PERFIL ════════ -->
         <div id="profPaneCustomize" class="profile-tab-pane">
           <!-- Vista previa y Foto Actual -->
-          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glow); border-radius:16px; padding:18px; margin-bottom:18px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+          <div class="profile-edit-avatar-card">
             <div class="profile-avatar-wrapper">
               <img id="editAvatarPreviewImg" src="assets/logo.png" alt="Vista Previa" class="profile-skin-cube avatar-glow-gold" style="width:92px; height:92px;" />
             </div>
@@ -3512,7 +3608,7 @@
           </div>
 
           <!-- Métodos Alternativos para Foto -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+          <div class="profile-grid-2col" style="margin-bottom:16px;">
             <!-- Skin por Nick de Minecraft -->
             <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px;">
               <div style="font-size:0.78rem; font-weight:700; color:var(--gold); margin-bottom:6px;">🎮 Skin de Minecraft (Bedrock / Java)</div>
@@ -3605,7 +3701,7 @@
               <input type="text" id="editProfileBio" maxlength="90" placeholder="Ej: ⚔️ Rey de la arena PvP en Titan Survival | Clan Titanes" />
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="profile-grid-2col">
               <div class="profile-form-group">
                 <label for="editProfileDiscord">Discord Tag / Usuario</label>
                 <input type="text" id="editProfileDiscord" maxlength="32" placeholder="Ej: @mi_usuario" />
@@ -3641,7 +3737,7 @@
               <input type="password" id="secCurrentPassword" placeholder="Introduce tu contraseña actual" />
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="profile-grid-2col">
               <div class="profile-form-group">
                 <label for="secNewPassword">Nueva Contraseña</label>
                 <input type="password" id="secNewPassword" placeholder="Mínimo 4 caracteres" />
@@ -3829,6 +3925,9 @@
       profiles[user.nick].discordTag = discord;
       profiles[user.nick].platform = platform;
       localStorage.setItem('titanProfiles', JSON.stringify(profiles));
+      if (window.TitanFirebase && typeof window.TitanFirebase.saveProfile === 'function') {
+        window.TitanFirebase.saveProfile(user.nick, profiles[user.nick]);
+      }
     }
 
     setCurrentUser(user);
